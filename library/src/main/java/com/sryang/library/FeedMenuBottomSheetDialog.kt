@@ -38,7 +38,8 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun FeedMenuBottomSheetDialog(
     isExpand: Boolean,
-    onSelect: (String) -> Unit
+    onSelect: (String) -> Unit,
+    color: Color = Color(0xFFFFFBE6)
 ) {
     val scope = rememberCoroutineScope()
     val scaffoldState = rememberBottomSheetScaffoldState()
@@ -55,6 +56,7 @@ fun FeedMenuBottomSheetDialog(
     BottomSheetScaffold(
         scaffoldState = scaffoldState,
         sheetPeekHeight = 0.dp,
+        containerColor = color,
         sheetContent = {
             Column(
                 Modifier
@@ -111,7 +113,6 @@ fun SaveButton(size: Dp) {
     }
 }
 
-@Preview
 @Composable
 fun QRButton(size: Dp) {
     Box()
@@ -144,10 +145,10 @@ fun QRButton(size: Dp) {
 
 @Preview
 @Composable
-fun FeedMenu() {
+fun FeedMenu(color: Color = Color(0xFFFFFBE6)) {
     val iconSize = 30.dp
     val rowHeight = 50.dp
-    Column {
+    Column(Modifier.background(color)) {
         Row(
             Modifier
                 .fillMaxWidth()

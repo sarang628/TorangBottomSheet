@@ -1,5 +1,6 @@
 package com.sryang.library
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,6 +21,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -30,7 +32,8 @@ import coil.compose.AsyncImage
 @Composable
 fun ShareBottomSheetDialog(
     isExpand: Boolean,
-    onSelect: (String) -> Unit
+    onSelect: (String) -> Unit,
+    color: Color = Color(0xFFFFFBE6)
 ) {
     val scaffoldState = rememberBottomSheetScaffoldState()
     LaunchedEffect(key1 = "", block = {
@@ -42,6 +45,7 @@ fun ShareBottomSheetDialog(
     BottomSheetScaffold(
         scaffoldState = scaffoldState,
         sheetPeekHeight = 0.dp,
+        sheetContainerColor = color,
         sheetContent = {
             Column(
                 Modifier

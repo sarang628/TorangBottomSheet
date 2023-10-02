@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -33,7 +34,8 @@ import coil.compose.AsyncImage
 @Composable
 fun CommentBottomSheetDialog(
     isExpand: Boolean,
-    onSelect: (String) -> Unit
+    onSelect: (String) -> Unit,
+    color: Color = Color(0xFFFFFBE6)
 ) {
     val scaffoldState = rememberBottomSheetScaffoldState()
     LaunchedEffect(key1 = "", block = {
@@ -45,6 +47,7 @@ fun CommentBottomSheetDialog(
 
     BottomSheetScaffold(
         scaffoldState = scaffoldState,
+        sheetContainerColor = color,
         sheetPeekHeight = 0.dp,
         sheetContent = {
             Column(
@@ -75,12 +78,17 @@ fun PreviewCommentBottomSheetDialog() {
 @Preview
 @Composable
 fun CommentHelp() {
-    Box {
+    Column(Modifier.padding(top = 5.dp, bottom = 15.dp)) {
         Text(
             text = "this reel is shared publicly to Facebook. Your interactions can also appear..",
-            Modifier.align(
-                Alignment.Center
-            )
+        )
+        Spacer(modifier = Modifier.height(10.dp))
+        Text(
+            text = "",
+            Modifier
+                .height(1.dp)
+                .fillMaxWidth()
+                .background(Color.LightGray)
         )
     }
 }
@@ -105,11 +113,12 @@ fun ItemCommentList() {
 fun ItemComment() {
     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
         AsyncImage(
-            model = R.drawable.qr,
+            model = "http://sarang628.iptime.org:89/7.png",
             contentDescription = "",
             modifier = Modifier
-                .size(50.dp)
+                .size(40.dp)
         )
+        Spacer(modifier = Modifier.width(12.dp))
         Column(Modifier.weight(1f)) {
             Row {
                 Text(text = "nick")
@@ -118,11 +127,14 @@ fun ItemComment() {
             Text(text = "How to insult French and Italian people at the same time")
             Text(text = "reply")
         }
-        AsyncImage(
-            model = R.drawable.save,
-            contentDescription = "",
-            modifier = Modifier
-                .size(50.dp)
-        )
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            AsyncImage(
+                model = R.drawable.bxv,
+                contentDescription = "",
+                modifier = Modifier
+                    .size(25.dp)
+            )
+            Text(text = "30")
+        }
     }
 }
