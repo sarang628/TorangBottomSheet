@@ -56,7 +56,7 @@ fun FeedMenuBottomSheetDialog(
     BottomSheetScaffold(
         scaffoldState = scaffoldState,
         sheetPeekHeight = 0.dp,
-        containerColor = color,
+        sheetContainerColor = color,
         sheetContent = {
             Column(
                 Modifier
