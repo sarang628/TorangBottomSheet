@@ -18,7 +18,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             TorangBottomSheetTheme {
-                ShareBottomSheetDialog(isExpand = true, onSelect = {})
+                ShareBottomSheetDialog(isExpand = true, onSelect = {}, onClose = {})
             }
         }
     }

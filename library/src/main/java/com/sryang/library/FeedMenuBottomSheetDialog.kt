@@ -19,11 +19,13 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -32,6 +34,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.collect
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -39,50 +43,42 @@ import androidx.compose.ui.unit.dp
 fun FeedMenuBottomSheetDialog(
     isExpand: Boolean,
     onSelect: (String) -> Unit,
-    color: Color = Color(0xFFFFFBE6)
+    color: Color = Color(0xFFFFFBE6),
+    onClose: () -> Unit
 ) {
-    val scope = rememberCoroutineScope()
     val scaffoldState = rememberBottomSheetScaffoldState()
-
-    LaunchedEffect(key1 = "", block = {
-        if (isExpand) {
-            Log.d("FolderListBottomSheetDialog", "!!!!")
-//            scaffoldState.bottomSheetState.partialExpand()
-            scaffoldState.bottomSheetState.expand()
-        }
-    })
-
-
-    BottomSheetScaffold(
+    CloseDetectBottomSheetScaffold(
+        isExpand = isExpand,
         scaffoldState = scaffoldState,
-        sheetPeekHeight = 0.dp,
-        sheetContainerColor = color,
-        sheetContent = {
-            Column(
-                Modifier
-                    .fillMaxWidth()
-                    .padding(10.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                FeedMenu()
-            }
-        }) { innerPadding ->
-        Box(Modifier.padding(innerPadding)) {
+        onClose = onClose
+    ) {
+        BottomSheetScaffold(
+            scaffoldState = scaffoldState,
+            sheetPeekHeight = 0.dp,
+            sheetContainerColor = color,
+            sheetContent = {
+                Column(
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(10.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    FeedMenu()
+                }
+            }) { innerPadding ->
+            Box(Modifier.padding(innerPadding)) {
 
+            }
         }
     }
-
 }
 
 @Preview
 @Composable
 fun test1() {
-    FeedMenuBottomSheetDialog(isExpand = true, onSelect = {
-
-    })
+    FeedMenuBottomSheetDialog(isExpand = true, onSelect = {}, onClose = {})
 }
 
-@Preview
 @Composable
 fun SaveButton(size: Dp) {
     Box()
@@ -241,5 +237,5 @@ fun FeedMenu(color: Color = Color(0xFFFFFBE6)) {
 @Preview
 @Composable
 fun PreviewFeedMenuBottomSheetDialog() {
-    FeedMenuBottomSheetDialog(isExpand = true, onSelect = {})
+    FeedMenuBottomSheetDialog(isExpand = true, onSelect = {}, onClose = {})
 }

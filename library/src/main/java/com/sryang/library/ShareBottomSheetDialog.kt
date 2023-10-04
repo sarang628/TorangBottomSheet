@@ -33,44 +33,44 @@ import coil.compose.AsyncImage
 fun ShareBottomSheetDialog(
     isExpand: Boolean,
     onSelect: (String) -> Unit,
-    color: Color = Color(0xFFFFFBE6)
+    color: Color = Color(0xFFFFFBE6),
+    onClose: () -> Unit,
 ) {
     val scaffoldState = rememberBottomSheetScaffoldState()
-    LaunchedEffect(key1 = "", block = {
-        if (isExpand) {
-            scaffoldState.bottomSheetState.expand()
-        }
-    })
-
-    BottomSheetScaffold(
+    CloseDetectBottomSheetScaffold(
+        isExpand = isExpand,
         scaffoldState = scaffoldState,
-        sheetPeekHeight = 0.dp,
-        sheetContainerColor = color,
-        sheetContent = {
-            Column(
-                Modifier
-                    .fillMaxWidth()
-                    .padding(start = 10.dp, end = 10.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                ShareSearchBar()
-                Spacer(modifier = Modifier.height(8.dp))
-                ItemShareList()
-            }
-        }) { innerPadding ->
-        Box(Modifier.padding(innerPadding)) {
+        onClose = onClose
+    ) {
+        BottomSheetScaffold(
+            scaffoldState = scaffoldState,
+            sheetPeekHeight = 0.dp,
+            sheetContainerColor = color,
+            sheetContent = {
+                Column(
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(start = 10.dp, end = 10.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    ShareSearchBar()
+                    Spacer(modifier = Modifier.height(8.dp))
+                    ItemShareList()
+                }
+            }) { innerPadding ->
+            Box(Modifier.padding(innerPadding)) {
 
+            }
         }
     }
+
 
 }
 
 @Preview
 @Composable
 fun PreviewShareBottomSheetDialog() {
-    ShareBottomSheetDialog(isExpand = true, onSelect = {
-
-    })
+    ShareBottomSheetDialog(isExpand = true, onSelect = {}, onClose = {})
 }
 
 
