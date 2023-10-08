@@ -1,6 +1,5 @@
 package com.sryang.library
 
-import android.renderscript.ScriptGroup.Input
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -15,13 +14,17 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.BottomSheetScaffold
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -36,11 +39,13 @@ import coil.compose.AsyncImage
 @Composable
 fun CommentBottomSheetDialog(
     profileImageServerUrl: String,
+    profileImageUrl: String,
     list: List<CommentItemUiState>,
     isExpand: Boolean,
     onSelect: (String) -> Unit,
     onClose: () -> Unit,
-    color: Color = Color(0xFFFFFBE6)
+    color: Color = Color(0xFFFFFBE6),
+    onSend: (String) -> Unit
 ) {
     val scaffoldState = rememberBottomSheetScaffoldState()
     CloseDetectBottomSheetScaffold(
@@ -61,8 +66,18 @@ fun CommentBottomSheetDialog(
                 ) {
                     CommentHelp()
                     ItemCommentList(profileImageServerUrl = profileImageServerUrl, list = list)
-                    Text(text = "", Modifier.height(1.dp).fillMaxWidth().background(Color.LightGray))
-                    InputComment()
+                    Text(
+                        text = "",
+                        Modifier
+                            .height(1.dp)
+                            .fillMaxWidth()
+                            .background(Color.LightGray)
+                    )
+                    InputComment(
+                        profileImageServerUrl = profileImageServerUrl,
+                        profileImageUrl = profileImageUrl,
+                        onSend = onSend
+                    )
                 }
             }) { innerPadding ->
             Box(Modifier.padding(innerPadding)) {
@@ -75,10 +90,17 @@ fun CommentBottomSheetDialog(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun InputComment() {
+fun InputComment(
+    profileImageServerUrl: String,
+    profileImageUrl: String,
+    onSend: (String) -> Unit
+) {
+
+    var input by remember { mutableStateOf("") }
+
     Row(Modifier.height(50.dp), verticalAlignment = Alignment.CenterVertically) {
         AsyncImage(
-            model = R.drawable.bxv,
+            model = profileImageServerUrl + profileImageUrl,
             contentDescription = "",
             Modifier
                 .size(35.dp)
@@ -86,7 +108,7 @@ fun InputComment() {
         )
         Spacer(modifier = Modifier.width(8.dp))
         OutlinedTextField(
-            value = "",
+            value = input,
             placeholder = {
                 Text(
                     text = "Add a comment for thenaughtyfork",
@@ -95,17 +117,20 @@ fun InputComment() {
                 )
             },
             onValueChange = {
-
+                input = it
             },
             modifier = Modifier
                 .height(50.dp)
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .weight(1f),
             colors = TextFieldDefaults.outlinedTextFieldColors(
                 focusedBorderColor = Color.Transparent,
                 unfocusedBorderColor = Color.Transparent
             )
         )
-
+        Button(onClick = { onSend.invoke(input) }) {
+            Text(text = "send")
+        }
     }
 }
 
@@ -114,9 +139,11 @@ fun InputComment() {
 fun PreviewCommentBottomSheetDialog() {
     CommentBottomSheetDialog(
         isExpand = true,
+        profileImageUrl = "1/2023-09-14/10_44_39_302.jpeg",
         onSelect = {},
         onClose = {},
-        profileImageServerUrl = "",
+        profileImageServerUrl = "http://sarang628.iptime.org:89/profile_images/",
+        onSend = {},
         list = ArrayList<CommentItemUiState>().apply {
             add(testCommentItemUiState())
             add(testCommentItemUiState())
@@ -170,6 +197,7 @@ fun ItemComment(profileImageServerUrl: String, uiState: CommentItemUiState) {
             contentDescription = "",
             modifier = Modifier
                 .size(40.dp)
+                .clip(CircleShape),
         )
         Spacer(modifier = Modifier.width(12.dp))
         Column(Modifier.weight(1f)) {
@@ -204,7 +232,7 @@ data class CommentItemUiState(
 fun testCommentItemUiState(): CommentItemUiState {
     return CommentItemUiState(
         userId = 0,
-        profileImageUrl = "1",
+        profileImageUrl = "1/2023-09-14/10_44_39_302.jpeg",
         date = "2",
         comment = "3",
         name = "4",
