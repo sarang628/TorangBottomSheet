@@ -8,10 +8,12 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.magnifier
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.Button
@@ -29,6 +31,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -64,6 +67,7 @@ fun CommentBottomSheetDialog(
                         .padding(10.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
+                    Text(text = "Comments", fontWeight = FontWeight.Bold)
                     CommentHelp()
                     ItemCommentList(profileImageServerUrl = profileImageServerUrl, list = list)
                     Text(
@@ -145,14 +149,19 @@ fun PreviewCommentBottomSheetDialog() {
         profileImageServerUrl = "http://sarang628.iptime.org:89/profile_images/",
         onSend = {},
         list = ArrayList<CommentItemUiState>().apply {
-            add(testCommentItemUiState())
-            add(testCommentItemUiState())
-            add(testCommentItemUiState())
-            add(testCommentItemUiState())
-            add(testCommentItemUiState())
-            add(testCommentItemUiState())
-            add(testCommentItemUiState())
-            add(testCommentItemUiState())
+//            add(testCommentItemUiState())
+//            add(testCommentItemUiState())
+//            add(testCommentItemUiState())
+//            add(testCommentItemUiState())
+//            add(testCommentItemUiState())
+//            add(testCommentItemUiState())
+//            add(testCommentItemUiState())
+//            add(testCommentItemUiState())
+//            add(testCommentItemUiState())
+//            add(testCommentItemUiState())
+//            add(testCommentItemUiState())
+//            add(testCommentItemUiState())
+//            add(testCommentItemUiState())
         }
     )
 }
@@ -177,7 +186,7 @@ fun CommentHelp() {
 
 @Composable
 fun ItemCommentList(profileImageServerUrl: String, list: List<CommentItemUiState>) {
-    Box {
+    Box(Modifier.heightIn(min = 350.dp)) {
         LazyColumn(content = {
             items(list.size) {
                 Column {
@@ -186,6 +195,16 @@ fun ItemCommentList(profileImageServerUrl: String, list: List<CommentItemUiState
                 }
             }
         })
+
+        if (list.isEmpty()) {
+            Column(Modifier.align(Alignment.Center)) {
+                Text(text = "No comments yet", fontWeight = FontWeight.Bold, fontSize = 23.sp)
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Text(text = "Start the conversation.")
+            }
+        }
     }
 }
 
