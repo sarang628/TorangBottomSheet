@@ -1,11 +1,13 @@
 package com.sryang.library
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.absolutePadding
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
@@ -15,6 +17,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.magnifier
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -31,6 +35,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -102,35 +107,35 @@ fun InputComment(
 
     var input by remember { mutableStateOf("") }
 
-    Row(Modifier.height(50.dp), verticalAlignment = Alignment.CenterVertically) {
+    Row(
+        Modifier
+            .height(50.dp)
+            .padding(top = 7.dp), verticalAlignment = Alignment.CenterVertically
+    ) {
         AsyncImage(
             model = profileImageServerUrl + profileImageUrl,
             contentDescription = "",
             Modifier
-                .size(35.dp)
-                .clip(CircleShape)
+                .size(40.dp)
+                .clip(CircleShape),
+            contentScale = ContentScale.Crop
         )
         Spacer(modifier = Modifier.width(8.dp))
-        OutlinedTextField(
+        BasicTextField(
             value = input,
-            placeholder = {
-                Text(
-                    text = "Add a comment for thenaughtyfork",
-                    color = Color.Gray,
-                    fontSize = 14.sp
-                )
-            },
-            onValueChange = {
-                input = it
-            },
-            modifier = Modifier
-                .height(50.dp)
-                .fillMaxWidth()
-                .weight(1f),
-            colors = TextFieldDefaults.outlinedTextFieldColors(
-                focusedBorderColor = Color.Transparent,
-                unfocusedBorderColor = Color.Transparent
-            )
+            onValueChange = { input = it },
+            modifier = Modifier.fillMaxWidth(),
+            decorationBox = { innerTextField ->
+                Box() {
+                    if (input.isEmpty()) {
+                        Text(
+                            text = "Add a comment for thenaughtyfork",
+                            color = Color.Gray
+                        )
+                    }
+                    innerTextField()
+                }
+            }
         )
         Button(onClick = { onSend.invoke(input) }) {
             Text(text = "send")
