@@ -53,6 +53,7 @@ fun FeedMenuBottomSheetDialog(
         onClose = onClose
     ) {
         BottomSheetScaffold(
+            modifier = it,
             scaffoldState = scaffoldState,
             sheetPeekHeight = 0.dp,
             sheetContainerColor = color,
