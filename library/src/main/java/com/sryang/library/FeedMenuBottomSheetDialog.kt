@@ -19,18 +19,25 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberBottomSheetScaffoldState
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -46,29 +53,28 @@ fun FeedMenuBottomSheetDialog(
     color: Color = Color(0xFFFFFBE6),
     onClose: () -> Unit
 ) {
-    val scaffoldState = rememberBottomSheetScaffoldState()
-    CloseDetectBottomSheetScaffold(
-        isExpand = isExpand,
-        scaffoldState = scaffoldState,
-        onClose = onClose
-    ) {
-        BottomSheetScaffold(
-            modifier = it,
-            scaffoldState = scaffoldState,
-            sheetPeekHeight = 0.dp,
-            sheetContainerColor = color,
-            sheetContent = {
-                Column(
-                    Modifier
-                        .fillMaxWidth()
-                        .padding(10.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    FeedMenu()
-                }
-            }) { innerPadding ->
-            Box(Modifier.padding(innerPadding)) {
+    val sheetState = rememberModalBottomSheetState(
+        skipPartiallyExpanded = true
+    )
+    val scope = rememberCoroutineScope()
+    var showBottomSheet by remember { mutableStateOf(isExpand) }
 
+    if (showBottomSheet) {
+        ModalBottomSheet(
+            onDismissRequest = {
+                showBottomSheet = false
+                onClose.invoke()
+            },
+            sheetState = sheetState,
+            containerColor = color
+        ) {
+            Column(
+                Modifier
+                    .fillMaxWidth()
+                    .padding(10.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                FeedMenu()
             }
         }
     }

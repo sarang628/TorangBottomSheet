@@ -40,62 +40,6 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import kotlinx.coroutines.launch
 
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun _CommentBottomSheetDialog(
-    profileImageServerUrl: String,
-    profileImageUrl: String,
-    list: List<CommentItemUiState>,
-    isExpand: Boolean,
-    onSelect: (String) -> Unit,
-    onClose: () -> Unit,
-    color: Color = Color(0xFFFFFBE6),
-    onSend: (String) -> Unit
-) {
-    val scaffoldState = rememberBottomSheetScaffoldState()
-    val coroutineScope = rememberCoroutineScope()
-    CloseDetectBottomSheetScaffold(
-        isExpand = isExpand,
-        scaffoldState = scaffoldState,
-        onClose = onClose,
-    ) {
-        BottomSheetScaffold(
-            modifier = it,
-            scaffoldState = scaffoldState,
-            sheetContainerColor = color,
-            sheetPeekHeight = 0.dp,
-            sheetContent = {
-                Column(
-                    Modifier
-                        .fillMaxWidth()
-                        .padding(10.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(text = "Comments", fontWeight = FontWeight.Bold)
-                    CommentHelp()
-                    ItemCommentList(profileImageServerUrl = profileImageServerUrl, list = list)
-                    Text(
-                        text = "",
-                        Modifier
-                            .height(1.dp)
-                            .fillMaxWidth()
-                            .background(Color.LightGray)
-                    )
-                    InputComment(
-                        profileImageServerUrl = profileImageServerUrl,
-                        profileImageUrl = profileImageUrl,
-                        onSend = onSend
-                    )
-                }
-            }) { innerPadding ->
-            Box(Modifier.padding(innerPadding)) {
-
-            }
-        }
-    }
-}
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CommentBottomSheetDialog(
