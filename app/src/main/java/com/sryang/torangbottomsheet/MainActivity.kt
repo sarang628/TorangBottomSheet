@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.tooling.preview.Preview
+import com.sryang.library.BottomSheetDemo
 import com.sryang.library.PreviewCommentBottomSheetDialog
 import com.sryang.library.ShareBottomSheetDialog
 import com.sryang.torangbottomsheet.ui.theme.TorangBottomSheetTheme
@@ -28,7 +29,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             val coroutineScope = rememberCoroutineScope()
 
-            Column() {
+            Column {
                 PreviewCommentBottomSheetDialog()
             }
         }
