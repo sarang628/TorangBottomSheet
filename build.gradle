@@ -8,11 +8,13 @@ plugins {
 
 ext {
     // Sdk and tools
-    compileSdk = 33
+    compileSdk = 34
     minSdk = 24
-    targetSdk = 30
+    targetSdk = 34
     buildToolsVersion = '30.0.3'
 
     //hilt
     hiltVersion = '2.44'
+
+    nav_version = '2.5.3'
 }

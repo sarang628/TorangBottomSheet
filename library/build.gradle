@@ -50,13 +50,11 @@ dependencies {
     androidTestImplementation composeBom
     //없으면 @Composable import 안됨
     implementation 'androidx.compose.ui:ui'
-    //없으면 Text("Hello") 안됨
-    implementation 'androidx.compose.material:material'
     // Android Studio Preview support
     implementation 'androidx.compose.ui:ui-tooling-preview'
     debugImplementation 'androidx.compose.ui:ui-tooling'
     //JetNews Main 따라하기
-    implementation 'androidx.compose.material3:material3'
+    implementation 'androidx.compose.material3:material3:1.2.0-alpha10' //JetNews Main 따라하기
     implementation "androidx.compose.material3:material3-window-size-class"
     // collectAsState
     implementation "androidx.lifecycle:lifecycle-runtime-compose:2.6.1"
