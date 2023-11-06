@@ -50,7 +50,6 @@ fun _CommentBottomSheetDialog(
     isExpand: Boolean,
     onSelect: (String) -> Unit,
     onClose: () -> Unit,
-    color: Color = Color(0xFFFFFBE6),
     onSend: (String) -> Unit
 ) {
     val scaffoldState = rememberBottomSheetScaffoldState()
@@ -63,7 +62,6 @@ fun _CommentBottomSheetDialog(
         BottomSheetScaffold(
             modifier = it,
             scaffoldState = scaffoldState,
-            sheetContainerColor = color,
             sheetPeekHeight = 0.dp,
             sheetContent = {
                 Column(

@@ -28,8 +28,7 @@ import androidx.compose.ui.unit.dp
 fun FolderListBottomSheetDialog(
     isExpand: Boolean,
     onSelect: (String) -> Unit,
-    list: List<String>,
-    color: Color = Color(0xFFFFFBE6)
+    list: List<String>
 ) {
     val scope = rememberCoroutineScope()
     val scaffoldState = rememberBottomSheetScaffoldState()
@@ -46,7 +45,6 @@ fun FolderListBottomSheetDialog(
     BottomSheetScaffold(
         scaffoldState = scaffoldState,
         sheetPeekHeight = 0.dp,
-        containerColor = color,
         sheetContent = {
             Column(
                 Modifier

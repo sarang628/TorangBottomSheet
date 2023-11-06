@@ -43,7 +43,6 @@ import kotlinx.coroutines.flow.collect
 fun _FeedMenuBottomSheetDialog(
     isExpand: Boolean,
     onSelect: (String) -> Unit,
-    color: Color = Color(0xFFFFFBE6),
     onClose: () -> Unit
 ) {
     val scaffoldState = rememberBottomSheetScaffoldState()
@@ -56,7 +55,6 @@ fun _FeedMenuBottomSheetDialog(
             modifier = it,
             scaffoldState = scaffoldState,
             sheetPeekHeight = 0.dp,
-            sheetContainerColor = color,
             sheetContent = {
                 Column(
                     Modifier

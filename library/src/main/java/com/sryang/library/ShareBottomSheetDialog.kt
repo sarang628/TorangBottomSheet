@@ -37,7 +37,6 @@ import coil.compose.AsyncImage
 fun ShareBottomSheetDialog(
     isExpand: Boolean,
     onSelect: (String) -> Unit,
-    color: Color = Color(0xFFFFFBE6),
     onClose: () -> Unit,
 ) {
     val sheetState = rememberModalBottomSheetState(
@@ -52,8 +51,7 @@ fun ShareBottomSheetDialog(
                 showBottomSheet = false
                 onClose.invoke()
             },
-            sheetState = sheetState,
-            containerColor = color
+            sheetState = sheetState
         ) {
             Column(
                 Modifier

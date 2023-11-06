@@ -24,7 +24,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -46,13 +45,11 @@ fun CommentBottomSheetDialog(
     isExpand: Boolean,
     onSelect: (String) -> Unit,
     onClose: () -> Unit,
-    color: Color = Color(0xFFFFFBE6),
     onSend: (String) -> Unit
 ) {
     val sheetState = rememberModalBottomSheetState(
         skipPartiallyExpanded = true
     )
-    val scope = rememberCoroutineScope()
     var showBottomSheet by remember { mutableStateOf(isExpand) }
 
     if (showBottomSheet) {
@@ -61,8 +58,7 @@ fun CommentBottomSheetDialog(
                 showBottomSheet = false
                 onClose.invoke()
             },
-            sheetState = sheetState,
-            containerColor = color
+            sheetState = sheetState
         ) {
             Column(
                 Modifier
@@ -91,7 +87,6 @@ fun CommentBottomSheetDialog(
 
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun InputComment(
     profileImageServerUrl: String,

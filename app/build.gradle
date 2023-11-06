@@ -46,5 +46,7 @@ dependencies {
     implementation "androidx.compose.material3:material3-window-size-class"
     implementation "androidx.navigation:navigation-compose:$nav_version"
 
+    implementation 'com.github.sarang628:Theme:28a1702347'
+
     implementation project(path: ':library')
 }

@@ -50,7 +50,6 @@ import kotlinx.coroutines.flow.collect
 fun FeedMenuBottomSheetDialog(
     isExpand: Boolean,
     onSelect: (String) -> Unit,
-    color: Color = Color(0xFFFFFBE6),
     onClose: () -> Unit
 ) {
     val sheetState = rememberModalBottomSheetState(
@@ -65,8 +64,7 @@ fun FeedMenuBottomSheetDialog(
                 showBottomSheet = false
                 onClose.invoke()
             },
-            sheetState = sheetState,
-            containerColor = color
+            sheetState = sheetState
         ) {
             Column(
                 Modifier
