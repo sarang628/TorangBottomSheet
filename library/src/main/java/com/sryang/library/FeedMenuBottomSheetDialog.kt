@@ -146,10 +146,10 @@ fun QRButton(size: Dp) {
 
 @Preview
 @Composable
-fun FeedMenu(color: Color = Color(0xFFFFFBE6)) {
+fun FeedMenu() {
     val iconSize = 30.dp
     val rowHeight = 50.dp
-    Column(Modifier.background(color)) {
+    Column {
         Row(
             Modifier
                 .fillMaxWidth()
