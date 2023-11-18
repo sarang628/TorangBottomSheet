@@ -9,6 +9,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.tooling.preview.Preview
+import com.sryang.library.data.CommentItemUiState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

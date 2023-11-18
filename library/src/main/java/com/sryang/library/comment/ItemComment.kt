@@ -16,6 +16,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.sryang.library.R
+import com.sryang.library.data.CommentItemUiState
 
 @Composable
 fun ItemComment(profileImageServerUrl: String, uiState: CommentItemUiState) {

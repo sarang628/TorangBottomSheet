@@ -13,6 +13,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.sryang.library.data.CommentItemUiState
+import com.sryang.library.data.testCommentItemUiState
 
 @Composable
 fun CommentList(
@@ -56,11 +58,6 @@ fun PreviewCommentScreen() {
         profileImageServerUrl = "",
         profileImageUrl = "",
         list = ArrayList<CommentItemUiState>().apply {
-            add(testCommentItemUiState())
-            add(testCommentItemUiState())
-            add(testCommentItemUiState())
-            add(testCommentItemUiState())
-            add(testCommentItemUiState())
             add(testCommentItemUiState())
             add(testCommentItemUiState())
             add(testCommentItemUiState())
