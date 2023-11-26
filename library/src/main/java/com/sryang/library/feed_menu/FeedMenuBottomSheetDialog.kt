@@ -36,33 +36,36 @@ import com.sryang.library.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FeedMenuBottomSheetDialog(
-    isExpand: Boolean,
-    onSelect: (String) -> Unit,
-    onClose: () -> Unit
-) {
+fun FeedMenuBottomSheetDialog(isExpand: Boolean, onReport: () -> Unit, onDelete: () -> Unit, onEdit: () -> Unit, onClose: () -> Unit)
+{
     val sheetState = rememberModalBottomSheetState(
         skipPartiallyExpanded = true
     )
     val scope = rememberCoroutineScope()
     var showBottomSheet by remember { mutableStateOf(isExpand) }
 
-    if (showBottomSheet) {
+    if (showBottomSheet)
+    {
         ModalBottomSheet(
             onDismissRequest = {
                 showBottomSheet = false
                 onClose.invoke()
-            },
-            sheetState = sheetState
+            }, sheetState = sheetState
         ) {
             Column(
                 Modifier
                     .fillMaxWidth()
-                    .padding(10.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+                    .padding(10.dp), horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                FeedMenu()
+                FeedMenu(isMine = true, onEdit = onEdit, onDelete = onDelete, onReport = onReport)
             }
         }
     }
+}
+
+@Preview
+@Composable
+fun PreviewFeedMenuBottomSheetDialog()
+{
+    FeedMenuBottomSheetDialog(isExpand = true, onReport = {}, onDelete = {}, onEdit = {}, onClose = {})
 }
