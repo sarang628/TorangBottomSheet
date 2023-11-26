@@ -1,4 +1,4 @@
-package com.sryang.library.data
+package com.sryang.torang.uistate
 
 data class CommentItemUiState(
     val userId: Int,

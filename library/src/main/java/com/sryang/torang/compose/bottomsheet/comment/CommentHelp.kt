@@ -1,4 +1,4 @@
-package com.sryang.library.comment
+package com.sryang.torang.compose.bottomsheet.comment
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column

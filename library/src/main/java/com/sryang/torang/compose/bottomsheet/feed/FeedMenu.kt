@@ -1,7 +1,6 @@
-package com.sryang.library.feed_menu
+package com.sryang.torang.compose.bottomsheet.feed
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -13,17 +12,15 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.sryang.library.R
+import com.sryang.torang.R
 
 @Composable
 fun FeedMenu(isMine: Boolean, onReport: () -> Unit, onDelete: () -> Unit, onEdit: () -> Unit)
@@ -40,8 +37,7 @@ fun FeedMenu(isMine: Boolean, onReport: () -> Unit, onDelete: () -> Unit, onEdit
         {
             FeedMenuRow(R.drawable.ic_information, "Edit", onEdit)
             FeedMenuRow(R.drawable.ic_people, "Delete", onDelete)
-        }
-        else
+        } else
         {
             FeedMenuRow(R.drawable.ic_report, "Report", onReport)
         }
@@ -58,11 +54,9 @@ fun PreviewFeedMenu()
 @Composable
 fun SaveAndQRCode()
 {
-    Row(
-        Modifier
+    Row(Modifier
             .fillMaxWidth()
-            .padding(top = 16.dp, bottom = 16.dp), horizontalArrangement = Arrangement.SpaceAround
-    ) {
+            .padding(top = 16.dp, bottom = 16.dp), horizontalArrangement = Arrangement.SpaceAround) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             SaveButton(60.dp)
             Text(text = "Save")
@@ -80,14 +74,10 @@ fun WeAreMovingThingsAround()
 {
     val iconSize = 30.dp
     val rowHeight = 50.dp
-    Row(
-        modifier = Modifier
+    Row(modifier = Modifier
             .height(rowHeight)
-            .padding(start = 10.dp), verticalAlignment = Alignment.CenterVertically
-    ) {
-        Image(
-            modifier = Modifier.size(iconSize), painter = painterResource(id = R.drawable.ic_share), contentDescription = ""
-        )
+            .padding(start = 10.dp), verticalAlignment = Alignment.CenterVertically) {
+        Image(modifier = Modifier.size(iconSize), painter = painterResource(id = R.drawable.ic_share), contentDescription = "")
         Spacer(modifier = Modifier.width(8.dp))
         Column {
             Text(text = "We're moving things around!")
@@ -103,17 +93,13 @@ fun FeedMenuRow(res: Int, desc: String, onClick: () -> Unit)
     val iconSize = 30.dp
     val rowHeight = 50.dp
     Row(modifier = Modifier
-        .height(rowHeight)
-        .fillMaxWidth()
-        .clickable(
-            interactionSource = interactionSource, indication = null
-        ) {
-            onClick.invoke()
-        }
-        .padding(start = 10.dp), verticalAlignment = Alignment.CenterVertically) {
-        Image(
-            modifier = Modifier.size(iconSize), painter = painterResource(id = res), contentDescription = ""
-        )
+            .height(rowHeight)
+            .fillMaxWidth()
+            .clickable(interactionSource = interactionSource, indication = null) {
+                onClick.invoke()
+            }
+            .padding(start = 10.dp), verticalAlignment = Alignment.CenterVertically) {
+        Image(modifier = Modifier.size(iconSize), painter = painterResource(id = res), contentDescription = "")
         Spacer(modifier = Modifier.width(8.dp))
         Text(text = desc)
     }

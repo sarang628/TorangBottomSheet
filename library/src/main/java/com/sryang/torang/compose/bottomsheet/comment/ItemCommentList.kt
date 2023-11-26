@@ -1,4 +1,4 @@
-package com.sryang.library.comment
+package com.sryang.torang.compose.bottomsheet.comment
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,7 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.sryang.library.data.CommentItemUiState
+import com.sryang.torang.uistate.CommentItemUiState
 
 @Composable
 fun ItemCommentList(profileImageServerUrl: String, list: List<CommentItemUiState>) {

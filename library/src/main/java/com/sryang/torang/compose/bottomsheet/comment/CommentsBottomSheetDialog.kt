@@ -1,4 +1,4 @@
-package com.sryang.library.comment
+package com.sryang.torang.compose.bottomsheet.comment
 
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
@@ -9,7 +9,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.tooling.preview.Preview
-import com.sryang.library.data.CommentItemUiState
+import com.sryang.torang.uistate.CommentItemUiState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

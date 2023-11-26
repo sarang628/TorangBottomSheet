@@ -1,4 +1,4 @@
-package com.sryang.library.comment
+package com.sryang.torang.compose.bottomsheet.comment
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -15,8 +15,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.sryang.library.R
-import com.sryang.library.data.CommentItemUiState
+import com.sryang.torang.R
+import com.sryang.torang.uistate.CommentItemUiState
 
 @Composable
 fun ItemComment(profileImageServerUrl: String, uiState: CommentItemUiState) {

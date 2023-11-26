@@ -1,4 +1,4 @@
-package com.sryang.library.comment
+package com.sryang.torang.compose.bottomsheet.comment
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,8 +13,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.sryang.library.data.CommentItemUiState
-import com.sryang.library.data.testCommentItemUiState
+import com.sryang.torang.uistate.CommentItemUiState
+import com.sryang.torang.uistate.testCommentItemUiState
 
 @Composable
 fun CommentList(

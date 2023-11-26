@@ -1,4 +1,4 @@
-package com.sryang.library.share
+package com.sryang.torang.compose.bottomsheet.share
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -7,22 +7,17 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.sryang.torang.data.User
 
-@Preview
 @Composable
-fun ItemShareList(list: List<ShareProfile>) {
+fun ItemShareList(list: List<User>, profileServerUrl: String)
+{
     Box {
         LazyColumn(content = {
             items(list.size) {
                 Column {
-                    ItemShare(
-                        profileUrl = list[it].profileUrl,
-                        name = list[it].name,
-                        date = list[it].date,
-                        id = list[it].id
-                    )
+                    ItemShare(profileUrl = profileServerUrl + list[it].picture, name = list[it].userName, date = "", id = list[it].userId)
                     Spacer(modifier = Modifier.height(10.dp))
                 }
             }
