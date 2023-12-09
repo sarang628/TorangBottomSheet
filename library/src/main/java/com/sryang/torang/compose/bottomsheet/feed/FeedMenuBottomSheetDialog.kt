@@ -7,6 +7,8 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -16,20 +18,33 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.sryang.torang.viewmodels.FeedMenuViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FeedMenuBottomSheetDialog(isExpand: Boolean, isMine: Boolean, onReport: () -> Unit, onDelete: () -> Unit, onEdit: () -> Unit, onClose: () -> Unit)
-{
+fun FeedMenuBottomSheetDialog(
+    viewModel: FeedMenuViewModel = hiltViewModel(),
+    isExpand: Boolean,
+    reviewId: Int,
+    onReport: () -> Unit,
+    onDelete: () -> Unit,
+    onEdit: () -> Unit,
+    onClose: () -> Unit
+) {
+
+    LaunchedEffect(key1 = reviewId, block = {
+        viewModel.load(reviewId)
+    })
+
+    val uiState by viewModel.uiState.collectAsState()
     val sheetState = rememberModalBottomSheetState(
         skipPartiallyExpanded = true
     )
-    val scope = rememberCoroutineScope()
     var showBottomSheet by remember { mutableStateOf(isExpand) }
 
-    if (showBottomSheet)
-    {
+    if (showBottomSheet) {
         ModalBottomSheet(
             onDismissRequest = {
                 showBottomSheet = false
@@ -39,9 +54,15 @@ fun FeedMenuBottomSheetDialog(isExpand: Boolean, isMine: Boolean, onReport: () -
             Column(
                 Modifier
                     .fillMaxWidth()
-                    .padding(10.dp), horizontalAlignment = Alignment.CenterHorizontally
+                    .padding(10.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                FeedMenu(isMine = isMine, onEdit = onEdit, onDelete = onDelete, onReport = onReport)
+                FeedMenu(
+                    isMine = uiState.isMine,
+                    onEdit = onEdit,
+                    onDelete = onDelete,
+                    onReport = onReport
+                )
             }
         }
     }
@@ -49,7 +70,13 @@ fun FeedMenuBottomSheetDialog(isExpand: Boolean, isMine: Boolean, onReport: () -
 
 @Preview
 @Composable
-fun PreviewFeedMenuBottomSheetDialog()
-{
-    FeedMenuBottomSheetDialog(isExpand = true, onReport = {}, onDelete = {}, onEdit = {}, onClose = {}, isMine = false)
+fun PreviewFeedMenuBottomSheetDialog() {
+    FeedMenuBottomSheetDialog(
+        isExpand = true,
+        onReport = {},
+        onDelete = {},
+        onEdit = {},
+        onClose = {},
+        reviewId = 117
+    )
 }
