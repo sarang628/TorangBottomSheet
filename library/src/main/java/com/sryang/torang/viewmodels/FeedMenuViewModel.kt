@@ -13,13 +13,13 @@ import javax.inject.Inject
 
 @HiltViewModel
 class FeedMenuViewModel @Inject constructor(
-    private val isMyReviewUseCase: IsMyReviewUseCase
+    //private val isMyReviewUseCase: IsMyReviewUseCase
 ) : ViewModel() {
     fun load(reviewId: Int) {
         viewModelScope.launch {
-            _uiState.update {
+            /*_uiState.update {
                 it.copy(isMine = isMyReviewUseCase.invoke(reviewId))
-            }
+            }*/
         }
     }
 
