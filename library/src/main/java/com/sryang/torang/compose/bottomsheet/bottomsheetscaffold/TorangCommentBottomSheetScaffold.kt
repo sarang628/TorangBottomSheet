@@ -92,12 +92,12 @@ fun TorangCommentBottomSheetScaffold(
     sheetShadowElevation: Dp = BottomSheetDefaults.Elevation,
     sheetContent: @Composable ColumnScope.() -> Unit,
     inputHiddenOffset : Dp,
+    snackbarHost: @Composable (SnackbarHostState) -> Unit = { SnackbarHost(it) },
+    scaffoldState: BottomSheetScaffoldState = rememberBottomSheetScaffoldState(
+        bottomSheetState = rememberStandardBottomSheetState(skipHiddenState = false)
+    ),
     content: @Composable (PaddingValues) -> Unit
 ) {
-    val snackbarHostState = remember { SnackbarHostState() }
-    val scaffoldState = rememberBottomSheetScaffoldState(
-        bottomSheetState = rememberStandardBottomSheetState(skipHiddenState = false),
-    )
     val density = LocalDensity.current.density
     var offset by remember { mutableStateOf(0.dp) }
 
@@ -122,7 +122,7 @@ fun TorangCommentBottomSheetScaffold(
             sheetDragHandle = { BottomSheetDefaults.DragHandle() },
             sheetSwipeEnabled = true,
             topBar = topBar,
-            snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
+            snackbarHost = snackbarHost,
             containerColor = containerColor,
             contentColor = contentColor,
             content = content,
