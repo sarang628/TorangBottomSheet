@@ -88,7 +88,10 @@ fun TorangCommentBottomSheetScaffold(
     containerColor: Color = MaterialTheme.colorScheme.surface,
     contentColor: Color = contentColorFor(containerColor),
     topBar: @Composable (() -> Unit)? = null,
+    sheetTonalElevation: Dp = BottomSheetDefaults.Elevation,
+    sheetShadowElevation: Dp = BottomSheetDefaults.Elevation,
     sheetContent: @Composable ColumnScope.() -> Unit,
+    inputHiddenOffset : Dp,
     content: @Composable (PaddingValues) -> Unit
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
@@ -114,22 +117,22 @@ fun TorangCommentBottomSheetScaffold(
             sheetShape = BottomSheetDefaults.ExpandedShape,
             sheetContainerColor = sheetContainerColor,
             sheetContentColor = sheetContentColor,
-            sheetTonalElevation = 30.dp,
-            sheetShadowElevation = 20.dp,
+            sheetTonalElevation = sheetTonalElevation,
+            sheetShadowElevation = sheetShadowElevation,
             sheetDragHandle = { BottomSheetDefaults.DragHandle() },
             sheetSwipeEnabled = true,
             topBar = topBar,
             snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
             containerColor = containerColor,
             contentColor = contentColor,
-            content = content
+            content = content,
         )
         Box(
             modifier = Modifier
                 .align(
                     Alignment.BottomCenter
                 )
-                .absoluteOffset(y = if ((LocalConfiguration.current.screenHeightDp.dp - offset) < 150.dp) 150.dp - (LocalConfiguration.current.screenHeightDp.dp - offset) else 0.dp)
+                .absoluteOffset(y = if ((LocalConfiguration.current.screenHeightDp.dp - offset) < inputHiddenOffset) inputHiddenOffset - (LocalConfiguration.current.screenHeightDp.dp - offset) else 0.dp)
         ) {
             input.invoke()
         }
