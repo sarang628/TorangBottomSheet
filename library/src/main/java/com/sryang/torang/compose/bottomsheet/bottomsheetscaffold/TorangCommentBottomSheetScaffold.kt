@@ -19,6 +19,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SheetValue
 import androidx.compose.material3.SmallTopAppBar
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -96,6 +97,7 @@ fun TorangCommentBottomSheetScaffold(
     scaffoldState: BottomSheetScaffoldState = rememberBottomSheetScaffoldState(
         bottomSheetState = rememberStandardBottomSheetState(skipHiddenState = false)
     ),
+    init : Boolean = false,
     content: @Composable (PaddingValues) -> Unit
 ) {
     val density = LocalDensity.current.density
@@ -113,7 +115,7 @@ fun TorangCommentBottomSheetScaffold(
         BottomSheetScaffold(
             scaffoldState = scaffoldState,
             sheetContent = sheetContent,
-            sheetPeekHeight = sheetPeekHeight,
+            sheetPeekHeight = if (init) 0.dp else sheetPeekHeight,
             sheetShape = BottomSheetDefaults.ExpandedShape,
             sheetContainerColor = sheetContainerColor,
             sheetContentColor = sheetContentColor,
