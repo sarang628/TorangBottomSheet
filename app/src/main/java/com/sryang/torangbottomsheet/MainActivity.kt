@@ -74,9 +74,25 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
+                    Column(
+                        Modifier
+                            .fillMaxHeight()
+                            .fillMaxWidth()
+                    ) {
+                        Text(text = "Torang Bottom Sheet Test")
+                        Button(onClick = {
+                            init = false
+                            coroutine.launch {
+                                scaffoldState.bottomSheetState.expand()
+                            }
+                        }) {
+                            Text(text = "show")
+                        }
+                    }
                     TorangCommentBottomSheetScaffold(
-                        input = { OutlinedTextField(value = "", onValueChange = {}) },
-                        topBar = { SmallTopAppBar(title = { Text(text = "Torang") }) },
+                        input = { modifier ->
+                            OutlinedTextField(modifier = modifier, value = "", onValueChange = {})
+                        },
                         scaffoldState = scaffoldState,
                         init = init,
                         sheetContent = {
@@ -95,24 +111,12 @@ class MainActivity : ComponentActivity() {
                             }
                         },
                         sheetPeekHeight = 350.dp,
-                        inputHiddenOffset = 200.dp
-                    ) {
-                        Column(
-                            Modifier
-                                .padding(it)
-                                .fillMaxHeight()
-                                .fillMaxWidth()
-                        ) {
-                            Text(text = "Torang Bottom Sheet Test")
-                            Button(onClick = {
-                                init = false
-                                coroutine.launch {
-                                    scaffoldState.bottomSheetState.expand()
-                                }
-                            }) {
-                                Text(text = "show")
-                            }
+                        inputHiddenOffset = 200.dp,
+                        onHidden = {
+                            Log.d("__sryang", "onHidden")
+                            init = true
                         }
+                    ) {
                     }
                     //Column(Modifier.verticalScroll(rememberScrollState())) {
                     //FeedRepositoryTest(feedRepository = feedRepository)
