@@ -72,7 +72,7 @@ import kotlinx.coroutines.delay
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TorangCommentBottomSheetScaffold(
-    input: @Composable (Modifier) -> Unit,
+    input: @Composable () -> Unit,
     sheetPeekHeight: Dp = BottomSheetDefaults.SheetPeekHeight,
     sheetContainerColor: Color = BottomSheetDefaults.ContainerColor,
     sheetContentColor: Color = contentColorFor(sheetContainerColor),
@@ -114,13 +114,6 @@ fun TorangCommentBottomSheetScaffold(
                 }
             }
     }
-    
-    LaunchedEffect(key1 = init) {
-        if (!init) {
-            delay(300)
-            focusRequester.requestFocus()
-        }
-    }
 
     if (!init)
         Box(modifier = Modifier) {
@@ -148,7 +141,7 @@ fun TorangCommentBottomSheetScaffold(
                     )
                     .absoluteOffset(y = if ((LocalConfiguration.current.screenHeightDp.dp - offset) < inputHiddenOffset) inputHiddenOffset - (LocalConfiguration.current.screenHeightDp.dp - offset) else 0.dp)
             ) {
-                input.invoke(Modifier.focusRequester(focusRequester))
+                input.invoke()
             }
         }
 }

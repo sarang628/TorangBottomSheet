@@ -90,8 +90,8 @@ class MainActivity : ComponentActivity() {
                         }
                     }
                     TorangCommentBottomSheetScaffold(
-                        input = { modifier ->
-                            OutlinedTextField(modifier = modifier, value = "", onValueChange = {})
+                        input = {
+                            OutlinedTextField(value = "", onValueChange = {})
                         },
                         scaffoldState = scaffoldState,
                         init = init,
