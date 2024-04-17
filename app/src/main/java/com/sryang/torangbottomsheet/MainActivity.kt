@@ -35,7 +35,9 @@ import androidx.compose.ui.unit.dp
 import com.google.samples.apps.sunflower.ui.TorangTheme
 import com.sarang.torang.repository.FeedRepository
 import com.sarang.torang.repository.LoginRepository
+import com.sryang.torang.compose.bottomsheet.PreviewCommentBottomSheetDialog
 import com.sryang.torang.compose.bottomsheet.bottomsheetscaffold.TorangCommentBottomSheetScaffold
+import com.sryang.torang.compose.bottomsheet.feed.PreviewFeedMenuBottomSheetDialog
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -74,7 +76,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Column(
+                    /*Column(
                         Modifier
                             .fillMaxHeight()
                             .fillMaxWidth()
@@ -115,16 +117,16 @@ class MainActivity : ComponentActivity() {
                         onHidden = {
                             Log.d("__sryang", "onHidden")
                             init = true
-                        }
-                    ) {
-                    }
+                        },
+                        content = {}
+                    )*/
                     //Column(Modifier.verticalScroll(rememberScrollState())) {
                     //FeedRepositoryTest(feedRepository = feedRepository)
                     //PreviewCommentBottomSheetDialog()
                     //PreviewShareBottomSheetDialog()
                     //PreviewShareBottomSheetDialog()
                     //LoginRepositoryTest(loginRepository = loginRepository)
-                    //PreviewFeedMenuBottomSheetDialog()
+                    PreviewFeedMenuBottomSheetDialog()
                     //}
                 }
             }
