@@ -23,40 +23,41 @@ import androidx.compose.ui.unit.dp
 import com.sryang.torang.R
 
 @Composable
-fun FeedMenu(isMine: Boolean, onReport: () -> Unit, onDelete: () -> Unit, onEdit: () -> Unit)
-{
-    val iconSize = 30.dp
-    val rowHeight = 50.dp
+fun MyMenu(onDelete: () -> Unit, onEdit: () -> Unit) {
     Column(Modifier.fillMaxWidth()) { //SaveAndQRCode()
-        //HorizontalDivider(color = Color.LightGray)
-        //WeAreMovingThingsAround()
-        //HorizontalDivider(color = Color.LightGray)
-        //FeedMenuRow(R.drawable.ic_information, "Why you're seeing this post")
-        //FeedMenuRow(R.drawable.ic_people, "About this account")
-        if (isMine)
-        {
-            FeedMenuRow(R.drawable.ic_information, "Edit", onEdit)
-            FeedMenuRow(R.drawable.ic_people, "Delete", onDelete)
-        } else
-        {
-            FeedMenuRow(R.drawable.ic_report, "Report", onReport)
-        }
+        FeedMenuRow(R.drawable.ic_information, "Edit", onEdit)
+        FeedMenuRow(R.drawable.ic_people, "Delete", onDelete)
+    }
+}
+
+@Composable
+fun ReportMenu(onReport: () -> Unit) {
+    Column(Modifier.fillMaxWidth()) {
+        FeedMenuRow(R.drawable.ic_report, "Report", onReport)
     }
 }
 
 @Preview
 @Composable
-fun PreviewFeedMenu()
-{
-    FeedMenu(isMine = true, onReport = {}, onDelete = {}, onEdit = {})
+fun PreviewFeedMenu() {
+    MyMenu(onDelete = {}, onEdit = {})
+}
+
+@Preview
+@Composable
+fun PreviewReportMenu() {
+    ReportMenu() {
+
+    }
 }
 
 @Composable
-fun SaveAndQRCode()
-{
-    Row(Modifier
+fun SaveAndQRCode() {
+    Row(
+        Modifier
             .fillMaxWidth()
-            .padding(top = 16.dp, bottom = 16.dp), horizontalArrangement = Arrangement.SpaceAround) {
+            .padding(top = 16.dp, bottom = 16.dp), horizontalArrangement = Arrangement.SpaceAround
+    ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             SaveButton(60.dp)
             Text(text = "Save")
@@ -70,14 +71,19 @@ fun SaveAndQRCode()
 }
 
 @Composable
-fun WeAreMovingThingsAround()
-{
+fun WeAreMovingThingsAround() {
     val iconSize = 30.dp
     val rowHeight = 50.dp
-    Row(modifier = Modifier
+    Row(
+        modifier = Modifier
             .height(rowHeight)
-            .padding(start = 10.dp), verticalAlignment = Alignment.CenterVertically) {
-        Image(modifier = Modifier.size(iconSize), painter = painterResource(id = R.drawable.ic_share), contentDescription = "")
+            .padding(start = 10.dp), verticalAlignment = Alignment.CenterVertically
+    ) {
+        Image(
+            modifier = Modifier.size(iconSize),
+            painter = painterResource(id = R.drawable.ic_share),
+            contentDescription = ""
+        )
         Spacer(modifier = Modifier.width(8.dp))
         Column {
             Text(text = "We're moving things around!")
@@ -87,19 +93,22 @@ fun WeAreMovingThingsAround()
 }
 
 @Composable
-fun FeedMenuRow(res: Int, desc: String, onClick: () -> Unit)
-{
+fun FeedMenuRow(res: Int, desc: String, onClick: () -> Unit) {
     val interactionSource = remember { MutableInteractionSource() }
     val iconSize = 30.dp
     val rowHeight = 50.dp
     Row(modifier = Modifier
-            .height(rowHeight)
-            .fillMaxWidth()
-            .clickable(interactionSource = interactionSource, indication = null) {
-                onClick.invoke()
-            }
-            .padding(start = 10.dp), verticalAlignment = Alignment.CenterVertically) {
-        Image(modifier = Modifier.size(iconSize), painter = painterResource(id = res), contentDescription = "")
+        .height(rowHeight)
+        .fillMaxWidth()
+        .clickable(interactionSource = interactionSource, indication = null) {
+            onClick.invoke()
+        }
+        .padding(start = 10.dp), verticalAlignment = Alignment.CenterVertically) {
+        Image(
+            modifier = Modifier.size(iconSize),
+            painter = painterResource(id = res),
+            contentDescription = ""
+        )
         Spacer(modifier = Modifier.width(8.dp))
         Text(text = desc)
     }

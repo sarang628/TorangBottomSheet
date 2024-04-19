@@ -11,6 +11,8 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.BottomSheetScaffoldState
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -34,10 +36,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.google.samples.apps.sunflower.ui.TorangTheme
 import com.sarang.torang.repository.FeedRepository
+import com.sarang.torang.repository.FeedRepositoryTest
 import com.sarang.torang.repository.LoginRepository
+import com.sarang.torang.repository.LoginRepositoryTest
 import com.sryang.torang.compose.bottomsheet.PreviewCommentBottomSheetDialog
 import com.sryang.torang.compose.bottomsheet.bottomsheetscaffold.TorangCommentBottomSheetScaffold
+import com.sryang.torang.compose.bottomsheet.feed.FeedMenuBottomSheetDialog
+import com.sryang.torang.compose.bottomsheet.feed.PreviewFeedMenu
 import com.sryang.torang.compose.bottomsheet.feed.PreviewFeedMenuBottomSheetDialog
+import com.sryang.torang.compose.bottomsheet.share.PreviewShareBottomSheetDialog
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -76,60 +83,71 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    /*Column(
-                        Modifier
-                            .fillMaxHeight()
-                            .fillMaxWidth()
-                    ) {
-                        Text(text = "Torang Bottom Sheet Test")
-                        Button(onClick = {
-                            init = false
-                            coroutine.launch {
-                                scaffoldState.bottomSheetState.expand()
-                            }
-                        }) {
-                            Text(text = "show")
-                        }
+                    //test()
+                    Column(Modifier.verticalScroll(rememberScrollState())) {
+                        FeedRepositoryTest(feedRepository = feedRepository)
+                        //PreviewCommentBottomSheetDialog()
+                        PreviewShareBottomSheetDialog()
+                        LoginRepositoryTest(loginRepository = loginRepository)
+                        //PreviewFeedMenuBottomSheetDialog()
+                        /*FeedMenuBottomSheetDialog(
+                            isExpand = true,
+                            onReport = {},
+                            onDelete = {},
+                            onEdit = {},
+                            onClose = {},
+                            reviewId = 342
+                        )*/
                     }
-                    TorangCommentBottomSheetScaffold(
-                        input = {
-                            OutlinedTextField(value = "", onValueChange = {})
-                        },
-                        scaffoldState = scaffoldState,
-                        init = init,
-                        sheetContent = {
-                            Box(
-                                Modifier
-                                    .fillMaxHeight()
-                                    .padding(bottom = 60.dp)
-                            ) {
-                                Column(
-                                    modifier = Modifier
-                                        .fillMaxSize()
-                                        .background(Color.LightGray)
-                                ) {
-                                    Text(text = "aaaaa")
-                                }
-                            }
-                        },
-                        sheetPeekHeight = 350.dp,
-                        inputHiddenOffset = 200.dp,
-                        onHidden = {
-                            Log.d("__sryang", "onHidden")
-                            init = true
-                        },
-                        content = {}
-                    )*/
-                    //Column(Modifier.verticalScroll(rememberScrollState())) {
-                    //FeedRepositoryTest(feedRepository = feedRepository)
-                    //PreviewCommentBottomSheetDialog()
-                    //PreviewShareBottomSheetDialog()
-                    //PreviewShareBottomSheetDialog()
-                    //LoginRepositoryTest(loginRepository = loginRepository)
-                    PreviewFeedMenuBottomSheetDialog()
-                    //}
                 }
             }
         }
     }
+}
+
+fun test() {
+    /*Column(
+               Modifier
+                   .fillMaxHeight()
+                   .fillMaxWidth()
+           ) {
+               Text(text = "Torang Bottom Sheet Test")
+               Button(onClick = {
+                   init = false
+                   coroutine.launch {
+                       scaffoldState.bottomSheetState.expand()
+                   }
+               }) {
+                   Text(text = "show")
+               }
+           }
+           TorangCommentBottomSheetScaffold(
+               input = {
+                   OutlinedTextField(value = "", onValueChange = {})
+               },
+               scaffoldState = scaffoldState,
+               init = init,
+               sheetContent = {
+                   Box(
+                       Modifier
+                           .fillMaxHeight()
+                           .padding(bottom = 60.dp)
+                   ) {
+                       Column(
+                           modifier = Modifier
+                               .fillMaxSize()
+                               .background(Color.LightGray)
+                       ) {
+                           Text(text = "aaaaa")
+                       }
+                   }
+               },
+               sheetPeekHeight = 350.dp,
+               inputHiddenOffset = 200.dp,
+               onHidden = {
+                   Log.d("__sryang", "onHidden")
+                   init = true
+               },
+               content = {}
+           )*/
 }

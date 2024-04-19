@@ -13,7 +13,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ShareViewModel @Inject constructor(
-    //getFollowerUseCase: GetFollowerUseCase
+    getFollowerUseCase: GetFollowerUseCase
 ) : ViewModel()
 {
     private val _uiState = MutableStateFlow(ShareDialogUiState(list = ArrayList()))
@@ -24,9 +24,9 @@ class ShareViewModel @Inject constructor(
         viewModelScope.launch {
             try
             {
-                /*_uiState.update {
+                _uiState.update {
                     it.copy(list = getFollowerUseCase.invoke())
-                }*/
+                }
             } catch (e: Exception)
             {
 

@@ -57,12 +57,14 @@ fun FeedMenuBottomSheetDialog(
                     .padding(10.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                FeedMenu(
-                    isMine = uiState.isMine,
-                    onEdit = onEdit,
-                    onDelete = onDelete,
-                    onReport = onReport
-                )
+                if (uiState.isMine) {
+                    MyMenu(
+                        onEdit = onEdit,
+                        onDelete = onDelete,
+                    )
+                } else {
+                    ReportMenu(onReport = onReport)
+                }
             }
         }
     }
