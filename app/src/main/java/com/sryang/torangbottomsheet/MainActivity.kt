@@ -90,14 +90,14 @@ class MainActivity : ComponentActivity() {
                         PreviewShareBottomSheetDialog()
                         LoginRepositoryTest(loginRepository = loginRepository)
                         //PreviewFeedMenuBottomSheetDialog()
-                        /*FeedMenuBottomSheetDialog(
+                        FeedMenuBottomSheetDialog(
                             isExpand = true,
                             onReport = {},
                             onDelete = {},
                             onEdit = {},
                             onClose = {},
                             reviewId = 342
-                        )*/
+                        )
                     }
                 }
             }

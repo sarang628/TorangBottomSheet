@@ -73,7 +73,7 @@ fun FeedMenuBottomSheetDialog(
 @Preview
 @Composable
 fun PreviewFeedMenuBottomSheetDialog() {
-    FeedMenuBottomSheetDialog(
+    FeedMenuBottomSheetDialog(/*preview*/
         isExpand = true,
         onReport = {},
         onDelete = {},

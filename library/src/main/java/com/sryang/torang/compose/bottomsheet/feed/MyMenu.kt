@@ -30,12 +30,6 @@ fun MyMenu(onDelete: () -> Unit, onEdit: () -> Unit) {
     }
 }
 
-@Composable
-fun ReportMenu(onReport: () -> Unit) {
-    Column(Modifier.fillMaxWidth()) {
-        FeedMenuRow(R.drawable.ic_report, "Report", onReport)
-    }
-}
 
 @Preview
 @Composable
@@ -43,54 +37,7 @@ fun PreviewFeedMenu() {
     MyMenu(onDelete = {}, onEdit = {})
 }
 
-@Preview
-@Composable
-fun PreviewReportMenu() {
-    ReportMenu() {
 
-    }
-}
-
-@Composable
-fun SaveAndQRCode() {
-    Row(
-        Modifier
-            .fillMaxWidth()
-            .padding(top = 16.dp, bottom = 16.dp), horizontalArrangement = Arrangement.SpaceAround
-    ) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            SaveButton(60.dp)
-            Text(text = "Save")
-        }
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            QRButton(60.dp)
-            Text(text = "QR code")
-        }
-
-    }
-}
-
-@Composable
-fun WeAreMovingThingsAround() {
-    val iconSize = 30.dp
-    val rowHeight = 50.dp
-    Row(
-        modifier = Modifier
-            .height(rowHeight)
-            .padding(start = 10.dp), verticalAlignment = Alignment.CenterVertically
-    ) {
-        Image(
-            modifier = Modifier.size(iconSize),
-            painter = painterResource(id = R.drawable.ic_share),
-            contentDescription = ""
-        )
-        Spacer(modifier = Modifier.width(8.dp))
-        Column {
-            Text(text = "We're moving things around!")
-            Text(text = "See where to share and link")
-        }
-    }
-}
 
 @Composable
 fun FeedMenuRow(res: Int, desc: String, onClick: () -> Unit) {
