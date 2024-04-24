@@ -18,5 +18,5 @@ ext {
 
     nav_version = '2.5.3'
 
-    torangRepositoryVersion = '0b0a15b80a'
+    torangRepositoryVersion = '544b126a86'
 }
