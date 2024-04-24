@@ -27,7 +27,6 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
@@ -87,16 +86,30 @@ fun TorangCommentBottomSheetScaffold(
     scaffoldState: BottomSheetScaffoldState = rememberBottomSheetScaffoldState(
         bottomSheetState = rememberStandardBottomSheetState(skipHiddenState = false)
     ),
-    init: Boolean = false,
+    show: Boolean = false,
     onHidden: (() -> Unit)? = null,
     content: @Composable (PaddingValues) -> Unit
 ) {
     val density = LocalDensity.current.density
     var offset by remember { mutableStateOf(0.dp) }
 
-    val focusRequester = remember { FocusRequester() }
+    LaunchedEffect(key1 = scaffoldState.bottomSheetState.currentValue) {
+        snapshotFlow { scaffoldState.bottomSheetState.currentValue }
+            .collect {
+                if (it == SheetValue.Hidden && show) {
+                    onHidden?.invoke()
+                }
+            }
+    }
 
-    if (!init) {
+    LaunchedEffect(key1 = show) {
+        if (show) {
+            delay(10)
+            scaffoldState.bottomSheetState.expand()
+        }
+    }
+
+    if (show) {
         LaunchedEffect(key1 = scaffoldState) {
             snapshotFlow {
                 scaffoldState.bottomSheetState.requireOffset()
@@ -104,18 +117,7 @@ fun TorangCommentBottomSheetScaffold(
                 offset = (it / density).dp
             }
         }
-    }
 
-    LaunchedEffect(key1 = scaffoldState.bottomSheetState.currentValue) {
-        snapshotFlow { scaffoldState.bottomSheetState.currentValue }
-            .collect {
-                if (it == SheetValue.Hidden && !init) {
-                    onHidden?.invoke()
-                }
-            }
-    }
-
-    if (!init)
         Box(modifier = Modifier) {
             BottomSheetScaffold(
                 scaffoldState = scaffoldState,
@@ -144,4 +146,5 @@ fun TorangCommentBottomSheetScaffold(
                 input.invoke()
             }
         }
+    }
 }
