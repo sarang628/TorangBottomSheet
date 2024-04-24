@@ -1,5 +1,6 @@
 package com.sryang.torang.compose.bottomsheet.bottomsheetscaffold
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
@@ -22,6 +23,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
@@ -33,6 +35,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 /**
  * <a href="https://m3.material.io/components/bottom-sheets/overview" class="external" target="_blank">Material Design standard bottom sheet scaffold</a>.
@@ -92,6 +95,15 @@ fun TorangCommentBottomSheetScaffold(
 ) {
     val density = LocalDensity.current.density
     var offset by remember { mutableStateOf(0.dp) }
+    val coroutine = rememberCoroutineScope()
+
+    if (show) {
+        BackHandler {
+            coroutine.launch {
+                scaffoldState.bottomSheetState.hide()
+            }
+        }
+    }
 
     LaunchedEffect(key1 = scaffoldState.bottomSheetState.currentValue) {
         snapshotFlow { scaffoldState.bottomSheetState.currentValue }
