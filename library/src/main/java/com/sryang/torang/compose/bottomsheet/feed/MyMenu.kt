@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -25,8 +26,8 @@ import com.sryang.torang.R
 @Composable
 fun MyMenu(onDelete: () -> Unit, onEdit: () -> Unit) {
     Column(Modifier.fillMaxWidth()) { //SaveAndQRCode()
-        FeedMenuRow(R.drawable.ic_information, "Edit", onEdit)
-        FeedMenuRow(R.drawable.ic_people, "Delete", onDelete)
+        FeedMenuRow(R.drawable.ic_edit, "Edit", onEdit)
+        FeedMenuRow(R.drawable.ic_delete, "Delete", onDelete)
     }
 }
 
@@ -51,7 +52,7 @@ fun FeedMenuRow(res: Int, desc: String, onClick: () -> Unit) {
             onClick.invoke()
         }
         .padding(start = 10.dp), verticalAlignment = Alignment.CenterVertically) {
-        Image(
+        Icon(
             modifier = Modifier.size(iconSize),
             painter = painterResource(id = res),
             contentDescription = ""

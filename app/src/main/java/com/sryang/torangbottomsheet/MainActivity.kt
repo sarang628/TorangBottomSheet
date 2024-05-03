@@ -27,6 +27,7 @@ import com.google.samples.apps.sunflower.ui.TorangTheme
 import com.sarang.torang.repository.FeedRepository
 import com.sarang.torang.repository.LoginRepository
 import com.sryang.torang.compose.bottomsheet.bottomsheetscaffold.TorangCommentBottomSheetScaffold
+import com.sryang.torang.compose.bottomsheet.feed.PreviewFeedMenuBottomSheetDialog
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -53,7 +54,7 @@ class MainActivity : ComponentActivity() {
                         //PreviewCommentBottomSheetDialog()
                         //PreviewShareBottomSheetDialog()
                         //LoginRepositoryTest(loginRepository = loginRepository)
-                        //PreviewFeedMenuBottomSheetDialog()
+                        PreviewFeedMenuBottomSheetDialog()
                         /*FeedMenuBottomSheetDialog(
                             isExpand = true,
                             onReport = {},
