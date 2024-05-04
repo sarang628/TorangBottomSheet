@@ -43,7 +43,7 @@ fun PreviewFeedMenu() {
 @Composable
 fun FeedMenuRow(res: Int, desc: String, onClick: () -> Unit) {
     val interactionSource = remember { MutableInteractionSource() }
-    val iconSize = 30.dp
+    val iconSize = 25.dp
     val rowHeight = 50.dp
     Row(modifier = Modifier
         .height(rowHeight)
