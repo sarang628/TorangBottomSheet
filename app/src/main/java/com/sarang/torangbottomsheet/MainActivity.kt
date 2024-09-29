@@ -29,6 +29,7 @@ import com.sarang.torang.repository.FeedRepository
 import com.sarang.torang.repository.LoginRepository
 import com.sarang.torang.compose.bottomsheet.bottomsheetscaffold.TorangCommentBottomSheetScaffold
 import com.sarang.torang.compose.bottomsheet.feed.PreviewFeedMenuBottomSheetDialog
+import com.sarang.torang.compose.bottomsheet.share.PreviewShareBottomSheetDialog
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -52,9 +53,9 @@ class MainActivity : ComponentActivity() {
                     Column(Modifier.verticalScroll(rememberScrollState())) {
 //                        FeedRepositoryTest(feedRepository = feedRepository)
                         PreviewCommentBottomSheetDialog()
-                        //PreviewShareBottomSheetDialog()
+//                        PreviewShareBottomSheetDialog()
                         //LoginRepositoryTest(loginRepository = loginRepository)
-                        //PreviewFeedMenuBottomSheetDialog()
+//                        PreviewFeedMenuBottomSheetDialog()
                         /*FeedMenuBottomSheetDialog(
                             isExpand = true,
                             onReport = {},
