@@ -19,7 +19,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import com.sryang.torang.R
+import com.sarang.torang.R
 
 @Composable
 fun ItemShare(profileUrl: Any, id: Int, name: String, date: String)
