@@ -1,4 +1,4 @@
-package com.sarang.torang.data
+package com.sarang.torang.data.bottomsheet
 
 import android.text.SpannableString
 import android.text.Spanned
