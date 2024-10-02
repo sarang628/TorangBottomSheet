@@ -52,7 +52,7 @@ class MainActivity : ComponentActivity() {
                     //test()
                     Column(Modifier.verticalScroll(rememberScrollState())) {
 //                        FeedRepositoryTest(feedRepository = feedRepository)
-                        PreviewCommentBottomSheetDialog()
+//                        PreviewCommentBottomSheetDialog()
 //                        PreviewShareBottomSheetDialog()
                         //LoginRepositoryTest(loginRepository = loginRepository)
 //                        PreviewFeedMenuBottomSheetDialog()
@@ -65,7 +65,7 @@ class MainActivity : ComponentActivity() {
                             reviewId = 342
                         )*/
                     }
-                    //TorangCommentBottonSheetScaffoldTest()
+                    TorangCommentBottonSheetScaffoldTest()
                 }
             }
         }
@@ -76,10 +76,6 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun TorangCommentBottonSheetScaffoldTest() {
     var show by remember { mutableStateOf(false) }
-    Column(Modifier.fillMaxHeight().fillMaxWidth()) {
-        Text(text = "Torang Bottom Sheet Test")
-        Button(onClick = { show = true }) { Text(text = "show") }
-    }
     TorangCommentBottomSheetScaffold(
         input = { OutlinedTextField(value = "", onValueChange = {}) },
         show = show,
@@ -87,6 +83,11 @@ fun TorangCommentBottonSheetScaffoldTest() {
         sheetPeekHeight = 350.dp,
         inputHiddenOffset = 200.dp,
         onHidden = { show = false },
-        content = {}
+        content = {
+            Column(Modifier.fillMaxHeight().fillMaxWidth()) {
+                Text(text = "Torang Bottom Sheet Test")
+                Button(onClick = { show = true }) { Text(text = "show") }
+            }
+        }
     )
 }

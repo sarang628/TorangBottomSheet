@@ -1,8 +1,10 @@
 package com.sarang.torang.compose.bottomsheet.bottomsheetscaffold
 
 import android.util.Log
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.absoluteOffset
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -10,13 +12,17 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.BottomSheetScaffold
+import androidx.compose.material3.BottomSheetScaffoldState
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SheetValue
 import androidx.compose.material3.SmallTopAppBar
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.contentColorFor
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.Composable
@@ -33,7 +39,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 /**
@@ -66,85 +74,149 @@ import kotlinx.coroutines.launch
  * @param snackbarHost SnackBar 설정 할 수 있는 영역
  * @param containerColor scaffold의 배경색.
  * @param contentColor scaffold 안에 색생을 설정하고 싶을 경우.기본적으로 [containerColor]로 설정, 그렇지 않으면 [LocalContentColor]
+ * @param expandOption
  * @param content 안에 내용. 람다에서 받는 [PaddingValues] 루트의 [Modifier.padding] 과 [Modifier.consumeWindowInsets] 에 적용.
  * 만약 [Modifier.verticalScroll] 사용한다면, 스크롤에 적용하기.
  */
 
-@Preview
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TorangBottomSheetScaffold() {
-    var data by remember { mutableStateOf("") }
-    val snackbarHostState = remember { SnackbarHostState() }
+fun TorangBottomSheetScaffold(
+    sheetPeekHeight: Dp = BottomSheetDefaults.SheetPeekHeight,
+    sheetContainerColor: Color = BottomSheetDefaults.ContainerColor,
+    sheetContentColor: Color = contentColorFor(sheetContainerColor),
+    containerColor: Color = MaterialTheme.colorScheme.surface,
+    contentColor: Color = contentColorFor(containerColor),
+    topBar: @Composable (() -> Unit)? = null,
+    sheetTonalElevation: Dp = BottomSheetDefaults.Elevation,
+    sheetShadowElevation: Dp = BottomSheetDefaults.Elevation,
+    sheetContent: @Composable ColumnScope.() -> Unit,
+    snackbarHost: @Composable (SnackbarHostState) -> Unit = { SnackbarHost(it) },
+    scaffoldState: BottomSheetScaffoldState = rememberBottomSheetScaffoldState(
+        bottomSheetState = rememberStandardBottomSheetState(
+            initialValue = SheetValue.Hidden,
+            skipHiddenState = false
+        )
+    ),
+    show: Boolean = false,
+    onHidden: (() -> Unit) = {},
+    onOffset: (Dp) -> Unit = {},
+    expandOption: SheetValue = SheetValue.Expanded,
+    content: @Composable (PaddingValues) -> Unit,
+) {
     val coroutine = rememberCoroutineScope()
-    val scaffoldState = rememberBottomSheetScaffoldState(
-        bottomSheetState = rememberStandardBottomSheetState(skipHiddenState = false),
-    )
     val density = LocalDensity.current.density
-    var offset by remember { mutableStateOf(0.dp) }
 
-    LaunchedEffect(key1 = scaffoldState) {
-        snapshotFlow {
-            scaffoldState.bottomSheetState.requireOffset()
-        }.collect {
-            offset = (it / density).dp
-            //Log.d("__sryang", "${it / density}")
+    var initBug by remember { mutableStateOf(false) }
+
+    if (show) {
+        BackHandler {
+            coroutine.launch {
+                scaffoldState.bottomSheetState.hide()
+            }
         }
     }
 
+    LaunchedEffect(key1 = scaffoldState.bottomSheetState.currentValue) {
+        snapshotFlow { scaffoldState.bottomSheetState.currentValue }
+            .collect {
+                Log.d("__TorangCommentBottomSheetScaffold", "currentValue : $it, show: $show")
+
+                if (!initBug && it == SheetValue.PartiallyExpanded) {
+                    initBug = true
+                    delay(10)
+                    scaffoldState.bottomSheetState.hide()
+                }
+
+                if (it == SheetValue.Hidden && show) {
+                    Log.d("__TorangCommentBottomSheetScaffold", "onHidden")
+                    onHidden.invoke()
+                }
+            }
+    }
+
+    LaunchedEffect(key1 = show) {
+        if (show) {
+            delay(10)
+            Log.d("__TorangCommentBottomSheetScaffold", "call expand")
+            if (expandOption == SheetValue.Expanded) {
+                scaffoldState.bottomSheetState.expand()
+            } else {
+                scaffoldState.bottomSheetState.partialExpand()
+            }
+        }
+    }
+
+
+    //if (show) {
     Box(modifier = Modifier) {
         BottomSheetScaffold(
             scaffoldState = scaffoldState,
-            sheetContent = {
-                Column(Modifier.fillMaxHeight()) {
-                    Text(text = "aaaaa")
-                    Button(onClick = {
-                        coroutine.launch {
-                            snackbarHostState.showSnackbar("cccc")
-                        }
-                    }
-                    ) {
-                        Text(text = "$data")
-                    }
-                }
-            },
-            sheetPeekHeight = 350.dp,
+            sheetContent = sheetContent,
+            sheetPeekHeight = sheetPeekHeight,
             sheetShape = BottomSheetDefaults.ExpandedShape,
-            sheetContainerColor = Color.Gray,
-            sheetContentColor = Color.Blue,
-            sheetTonalElevation = 30.dp,
-            sheetShadowElevation = 20.dp,
+            sheetContainerColor = sheetContainerColor,
+            sheetContentColor = sheetContentColor,
+            sheetTonalElevation = sheetTonalElevation,
+            sheetShadowElevation = sheetShadowElevation,
             sheetDragHandle = { BottomSheetDefaults.DragHandle() },
             sheetSwipeEnabled = true,
-            topBar = { SmallTopAppBar(title = { Text(text = "title") }) },
-            snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
-            containerColor = Color.LightGray,
-            contentColor = Color.Black
-        ) {
+            topBar = topBar,
+            snackbarHost = snackbarHost,
+            containerColor = containerColor,
+            contentColor = contentColor,
+            content = content
+        )
+    }
+
+    LaunchedEffect(key1 = show) {
+        snapshotFlow {
+            scaffoldState.bottomSheetState.requireOffset()
+        }.collect {
+            onOffset.invoke((it / density).dp)
+        }
+    }
+    //}
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Preview
+@Composable
+fun PreviewTorangBottomSheetScaffold() {
+    val snackbarHostState = remember { SnackbarHostState() }
+    val coroutine = rememberCoroutineScope()
+    var data by remember { mutableStateOf("") }
+    var show by remember { mutableStateOf(true) }
+    TorangBottomSheetScaffold(/*Preview*/
+        sheetPeekHeight = 350.dp,
+        snackbarHost = { SnackbarHost(hostState = it) },
+        show = show,
+        onHidden = {
+            Log.d("__PreviewTorangBottomSheetScaffold", "onHidden")
+            show = false
+        },
+        content = {
             Column(
                 Modifier
                     .padding(it)
                     .fillMaxHeight()
                     .fillMaxWidth()
             ) {
-                Text(text = "contenttt")
+                Text(text = "contentt")
+            }
+        },
+        sheetContent = {
+            Column(Modifier.fillMaxHeight()) {
+                Text(text = "aaaaa")
+                Button(onClick = {
+                    coroutine.launch {
+                        snackbarHostState.showSnackbar("cccc")
+                    }
+                }
+                ) {
+                    Text(text = "$data")
+                }
             }
         }
-
-        Log.d("__sryang", (LocalConfiguration.current.screenHeightDp.dp - offset).toString())
-
-        Button(
-            onClick = {
-                coroutine.launch {
-                    scaffoldState.bottomSheetState.expand()
-                }
-            }, modifier = Modifier
-                .align(
-                    Alignment.BottomCenter
-                )
-                .absoluteOffset(y = if ((LocalConfiguration.current.screenHeightDp.dp - offset) < 150.dp) 150.dp - (LocalConfiguration.current.screenHeightDp.dp - offset) else 0.dp)
-        ) {
-            Text(text = "bbbb ${LocalConfiguration.current.screenHeightDp}")
-        }
-    }
+    )
 }

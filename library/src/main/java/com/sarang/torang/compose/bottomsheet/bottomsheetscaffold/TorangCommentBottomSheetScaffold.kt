@@ -1,40 +1,32 @@
 package com.sarang.torang.compose.bottomsheet.bottomsheetscaffold
 
-import androidx.activity.compose.BackHandler
+import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.absoluteOffset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.BottomSheetDefaults
-import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.BottomSheetScaffoldState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SheetValue
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.contentColorFor
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 /**
  * <a href="https://m3.material.io/components/bottom-sheets/overview" class="external" target="_blank">Material Design standard bottom sheet scaffold</a>.
@@ -89,64 +81,33 @@ fun TorangCommentBottomSheetScaffold(
         bottomSheetState = rememberStandardBottomSheetState(skipHiddenState = false)
     ),
     show: Boolean = false,
-    onHidden: (() -> Unit)? = null,
-    content: @Composable (PaddingValues) -> Unit
+    onHidden: (() -> Unit) = {},
+    content: @Composable (PaddingValues) -> Unit,
 ) {
-    val density = LocalDensity.current.density
     var offset by remember { mutableStateOf(0.dp) }
-    val coroutine = rememberCoroutineScope()
 
-    if (show) {
-        BackHandler {
-            coroutine.launch {
-                scaffoldState.bottomSheetState.hide()
-            }
-        }
-    }
-
-    LaunchedEffect(key1 = scaffoldState.bottomSheetState.currentValue) {
-        snapshotFlow { scaffoldState.bottomSheetState.currentValue }
-            .collect {
-                if (it == SheetValue.Hidden && show) {
-                    onHidden?.invoke()
-                }
-            }
-    }
-
-    LaunchedEffect(key1 = show) {
-        if (show) {
-            delay(10)
-            scaffoldState.bottomSheetState.expand()
-        }
-    }
-
-    if (show) {
-        LaunchedEffect(key1 = scaffoldState) {
-            snapshotFlow {
-                scaffoldState.bottomSheetState.requireOffset()
-            }.collect {
-                offset = (it / density).dp
-            }
-        }
-
-        Box(modifier = Modifier) {
-            BottomSheetScaffold(
-                scaffoldState = scaffoldState,
-                sheetContent = sheetContent,
-                sheetPeekHeight = sheetPeekHeight,
-                sheetShape = BottomSheetDefaults.ExpandedShape,
-                sheetContainerColor = sheetContainerColor,
-                sheetContentColor = sheetContentColor,
-                sheetTonalElevation = sheetTonalElevation,
-                sheetShadowElevation = sheetShadowElevation,
-                sheetDragHandle = { BottomSheetDefaults.DragHandle() },
-                sheetSwipeEnabled = true,
-                topBar = topBar,
-                snackbarHost = snackbarHost,
-                containerColor = containerColor,
-                contentColor = contentColor,
-                content = content,
-            )
+    Box(modifier = Modifier) {
+        TorangBottomSheetScaffold(
+            scaffoldState = scaffoldState,
+            sheetContent = sheetContent,
+            sheetPeekHeight = sheetPeekHeight,
+            //sheetShape = BottomSheetDefaults.ExpandedShape,
+            sheetContainerColor = sheetContainerColor,
+            sheetContentColor = sheetContentColor,
+            sheetTonalElevation = sheetTonalElevation,
+            sheetShadowElevation = sheetShadowElevation,
+            //sheetDragHandle = { BottomSheetDefaults.DragHandle() },
+            //sheetSwipeEnabled = true,
+            topBar = topBar,
+            snackbarHost = snackbarHost,
+            containerColor = containerColor,
+            contentColor = contentColor,
+            content = content,
+            show = show,
+            onHidden = onHidden,
+            onOffset = { offset = it }
+        )
+        if (show)
             Box(
                 modifier = Modifier
                     .align(
@@ -156,6 +117,5 @@ fun TorangCommentBottomSheetScaffold(
             ) {
                 input.invoke()
             }
-        }
     }
 }
