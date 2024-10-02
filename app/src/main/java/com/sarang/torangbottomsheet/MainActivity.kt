@@ -22,9 +22,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.google.samples.apps.sunflower.ui.TorangTheme
+import com.sarang.torang.compose.bottomsheet.ImageSelectBottomSheetScaffold
 import com.sarang.torang.compose.bottomsheet.PreviewCommentBottomSheetDialog
+import com.sarang.torang.compose.bottomsheet.PreviewImageSelectBottomSheetDialog
 import com.sarang.torang.repository.FeedRepository
 import com.sarang.torang.repository.LoginRepository
 import com.sarang.torang.compose.bottomsheet.bottomsheetscaffold.TorangCommentBottomSheetScaffold
@@ -65,7 +68,8 @@ class MainActivity : ComponentActivity() {
                             reviewId = 342
                         )*/
                     }
-                    TorangCommentBottonSheetScaffoldTest()
+                    //TorangCommentBottonSheetScaffoldTest()
+                    PreviewImageSelectBottomSheetDialog()
                 }
             }
         }
@@ -73,6 +77,7 @@ class MainActivity : ComponentActivity() {
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
+@Preview
 @Composable
 fun TorangCommentBottonSheetScaffoldTest() {
     var show by remember { mutableStateOf(false) }
@@ -84,10 +89,32 @@ fun TorangCommentBottonSheetScaffoldTest() {
         inputHiddenOffset = 200.dp,
         onHidden = { show = false },
         content = {
-            Column(Modifier.fillMaxHeight().fillMaxWidth()) {
+            Column(
+                Modifier
+                    .fillMaxHeight()
+                    .fillMaxWidth()) {
                 Text(text = "Torang Bottom Sheet Test")
                 Button(onClick = { show = true }) { Text(text = "show") }
             }
         }
     )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewImageSelectBottomSheetDialog() {
+    var show by remember { mutableStateOf(false) }
+    Box(modifier = Modifier.fillMaxSize()) {
+        ImageSelectBottomSheetScaffold(
+            show = show,
+            onHidden = { show = false },
+            imageSelectCompose = {}
+        ) {
+            Box(modifier = Modifier.fillMaxSize()) {
+                Button(onClick = { show = true }) {
+                    Text(text = "show")
+                }
+            }
+        }
+    }
 }

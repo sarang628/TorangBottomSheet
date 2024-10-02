@@ -33,7 +33,7 @@ fun ImageSelectBottomSheetScaffold(
     TorangBottomSheetScaffold(
         scaffoldState = rememberBottomSheetScaffoldState(
             bottomSheetState = rememberStandardBottomSheetState(
-                initialValue = SheetValue.Hidden,
+                //initialValue = SheetValue.Hidden, // SheetValue.Hidden 설정 시 초기에 안내려 감
                 skipHiddenState = false
             )
         ),

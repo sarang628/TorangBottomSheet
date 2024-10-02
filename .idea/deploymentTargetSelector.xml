@@ -16,6 +16,9 @@
       <SelectionState runConfigName="PreviewImageSelectBottomSheetDialog">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
+      <SelectionState runConfigName="PreviewTorangBottomSheetScaffold">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
     </selectionStates>
   </component>
 </project>

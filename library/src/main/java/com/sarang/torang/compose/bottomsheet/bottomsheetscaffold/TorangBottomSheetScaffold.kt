@@ -120,11 +120,15 @@ fun TorangBottomSheetScaffold(
     LaunchedEffect(key1 = scaffoldState.bottomSheetState.currentValue) {
         snapshotFlow { scaffoldState.bottomSheetState.currentValue }
             .collect {
-                Log.d("__TorangCommentBottomSheetScaffold", "currentValue : $it, show: $show")
+                Log.d(
+                    "__TorangCommentBottomSheetScaffold",
+                    "currentValue : $it, show: $show, initBug: $initBug"
+                )
 
                 if (!initBug && it == SheetValue.PartiallyExpanded) {
                     initBug = true
                     delay(10)
+                    Log.d("__TorangCommentBottomSheetScaffold", "initBug call hide()")
                     scaffoldState.bottomSheetState.hide()
                 }
 
@@ -186,7 +190,7 @@ fun PreviewTorangBottomSheetScaffold() {
     val snackbarHostState = remember { SnackbarHostState() }
     val coroutine = rememberCoroutineScope()
     var data by remember { mutableStateOf("") }
-    var show by remember { mutableStateOf(true) }
+    var show by remember { mutableStateOf(false) }
     TorangBottomSheetScaffold(/*Preview*/
         sheetPeekHeight = 350.dp,
         snackbarHost = { SnackbarHost(hostState = it) },
@@ -202,9 +206,12 @@ fun PreviewTorangBottomSheetScaffold() {
                     .fillMaxHeight()
                     .fillMaxWidth()
             ) {
-                Text(text = "contentt")
+                Button(onClick = { show = true }) {
+                    Text(text = "show")
+                }
             }
         },
+        expandOption = SheetValue.PartiallyExpanded,
         sheetContent = {
             Column(Modifier.fillMaxHeight()) {
                 Text(text = "aaaaa")
