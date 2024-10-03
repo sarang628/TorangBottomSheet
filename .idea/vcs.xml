@@ -3,5 +3,6 @@
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/app/src/main/java/com/sarang/torangbottomsheet/di/repository" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/gradle/TorangToml" vcs="Git" />
   </component>
 </project>

@@ -127,7 +127,7 @@ fun TorangBottomSheetScaffold(
 
                 if (!initBug && it == SheetValue.PartiallyExpanded) {
                     initBug = true
-                    delay(10)
+                    delay(1)
                     Log.d("__TorangCommentBottomSheetScaffold", "initBug call hide()")
                     scaffoldState.bottomSheetState.hide()
                 }
@@ -147,6 +147,13 @@ fun TorangBottomSheetScaffold(
                 scaffoldState.bottomSheetState.expand()
             } else {
                 scaffoldState.bottomSheetState.partialExpand()
+            }
+        } else {
+            delay(10)
+            if (scaffoldState.bottomSheetState.currentValue == SheetValue.Expanded
+                || scaffoldState.bottomSheetState.currentValue == SheetValue.PartiallyExpanded
+            ) {
+                scaffoldState.bottomSheetState.hide()
             }
         }
     }
@@ -206,8 +213,8 @@ fun PreviewTorangBottomSheetScaffold() {
                     .fillMaxHeight()
                     .fillMaxWidth()
             ) {
-                Button(onClick = { show = true }) {
-                    Text(text = "show")
+                Button(onClick = { show = !show }) {
+                    Text(text = if (show) "hide" else ("show"))
                 }
             }
         },
