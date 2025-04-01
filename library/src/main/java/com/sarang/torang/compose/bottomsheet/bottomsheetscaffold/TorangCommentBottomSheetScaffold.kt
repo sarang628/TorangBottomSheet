@@ -11,6 +11,7 @@ import androidx.compose.material3.BottomSheetScaffoldState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SheetValue
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.contentColorFor
@@ -78,7 +79,10 @@ fun TorangCommentBottomSheetScaffold(
     inputHiddenOffset: Dp,
     snackbarHost: @Composable (SnackbarHostState) -> Unit = { SnackbarHost(it) },
     scaffoldState: BottomSheetScaffoldState = rememberBottomSheetScaffoldState(
-        bottomSheetState = rememberStandardBottomSheetState(skipHiddenState = false)
+        bottomSheetState = rememberStandardBottomSheetState(
+            skipHiddenState = false,
+            initialValue = SheetValue.Hidden
+        )
     ),
     show: Boolean = false,
     onHidden: (() -> Unit) = {},

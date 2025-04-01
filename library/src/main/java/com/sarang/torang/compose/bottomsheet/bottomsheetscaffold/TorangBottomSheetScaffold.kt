@@ -2,11 +2,9 @@ package com.sarang.torang.compose.bottomsheet.bottomsheetscaffold
 
 import android.util.Log
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.absoluteOffset
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -18,7 +16,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SheetValue
-import androidx.compose.material3.SmallTopAppBar
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -33,10 +30,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
@@ -47,12 +42,9 @@ import kotlinx.coroutines.launch
 /**
  * <a href="https://m3.material.io/components/bottom-sheets/overview" class="external" target="_blank">Material Design standard bottom sheet scaffold</a>.
  *
- * Standard bottom sheets 는 화면의 main UI 영역과 '공존' and '동시에 보여줌' and '서로 영역이 상호작용'.
- * 메인 UI 영역이 스크롤 또는 움직일 때 어떤 '특징' 또는 '보조 내용' 보여줌.
+ * material design 의 표준 bottom sheet
  *
- * ![Bottom sheet image](https://developer.android.com/images/reference/androidx/compose/material3/bottom_sheet.png)
- *
- * 이 컴포넌트는 bottom sheets의 목적에 맞는 화면을 보여주는 material components API를 제공
+ * bottom sheet main UI 영역에 같이 보여주고 상호작용함.
  *
  * 예제
  * @sample androidx.compose.material3.samples.SimpleBottomSheetScaffoldSample
@@ -82,6 +74,7 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TorangBottomSheetScaffold(
+    modifier: Modifier = Modifier,
     sheetPeekHeight: Dp = BottomSheetDefaults.SheetPeekHeight,
     sheetContainerColor: Color = BottomSheetDefaults.ContainerColor,
     sheetContentColor: Color = contentColorFor(sheetContainerColor),
@@ -104,10 +97,9 @@ fun TorangBottomSheetScaffold(
     expandOption: SheetValue = SheetValue.Expanded,
     content: @Composable (PaddingValues) -> Unit,
 ) {
+    val TAG = "__TorangCommentBottomSheetScaffold"
     val coroutine = rememberCoroutineScope()
     val density = LocalDensity.current.density
-
-    var initBug by remember { mutableStateOf(false) }
 
     if (show) {
         BackHandler {
@@ -120,20 +112,8 @@ fun TorangBottomSheetScaffold(
     LaunchedEffect(key1 = scaffoldState.bottomSheetState.currentValue) {
         snapshotFlow { scaffoldState.bottomSheetState.currentValue }
             .collect {
-                Log.d(
-                    "__TorangCommentBottomSheetScaffold",
-                    "currentValue : $it, show: $show, initBug: $initBug"
-                )
-
-                if (!initBug && it == SheetValue.PartiallyExpanded) {
-                    initBug = true
-                    delay(1)
-                    Log.d("__TorangCommentBottomSheetScaffold", "initBug call hide()")
-                    scaffoldState.bottomSheetState.hide()
-                }
-
                 if (it == SheetValue.Hidden && show) {
-                    Log.d("__TorangCommentBottomSheetScaffold", "onHidden")
+                    Log.d(TAG, "onHidden")
                     onHidden.invoke()
                 }
             }
@@ -141,15 +121,13 @@ fun TorangBottomSheetScaffold(
 
     LaunchedEffect(key1 = show) {
         if (show) {
-            delay(10)
-            Log.d("__TorangCommentBottomSheetScaffold", "call expand")
+            Log.d(TAG, "call expand")
             if (expandOption == SheetValue.Expanded) {
                 scaffoldState.bottomSheetState.expand()
             } else {
                 scaffoldState.bottomSheetState.partialExpand()
             }
         } else {
-            delay(10)
             if (scaffoldState.bottomSheetState.currentValue == SheetValue.Expanded
                 || scaffoldState.bottomSheetState.currentValue == SheetValue.PartiallyExpanded
             ) {
@@ -158,27 +136,24 @@ fun TorangBottomSheetScaffold(
         }
     }
 
-
-    //if (show) {
-    Box(modifier = Modifier) {
-        BottomSheetScaffold(
-            scaffoldState = scaffoldState,
-            sheetContent = sheetContent,
-            sheetPeekHeight = sheetPeekHeight,
-            sheetShape = BottomSheetDefaults.ExpandedShape,
-            sheetContainerColor = sheetContainerColor,
-            sheetContentColor = sheetContentColor,
-            sheetTonalElevation = sheetTonalElevation,
-            sheetShadowElevation = sheetShadowElevation,
-            sheetDragHandle = { BottomSheetDefaults.DragHandle() },
-            sheetSwipeEnabled = true,
-            topBar = topBar,
-            snackbarHost = snackbarHost,
-            containerColor = containerColor,
-            contentColor = contentColor,
-            content = content
-        )
-    }
+    BottomSheetScaffold(
+        modifier = modifier,
+        scaffoldState = scaffoldState,
+        sheetContent = sheetContent,
+        sheetPeekHeight = sheetPeekHeight,
+        sheetShape = BottomSheetDefaults.ExpandedShape,
+        sheetContainerColor = sheetContainerColor,
+        sheetContentColor = sheetContentColor,
+        sheetTonalElevation = sheetTonalElevation,
+        sheetShadowElevation = sheetShadowElevation,
+        sheetDragHandle = { BottomSheetDefaults.DragHandle() },
+        sheetSwipeEnabled = true,
+        topBar = topBar,
+        snackbarHost = snackbarHost,
+        containerColor = containerColor,
+        contentColor = contentColor,
+        content = content
+    )
 
     LaunchedEffect(key1 = show) {
         snapshotFlow {
@@ -187,7 +162,6 @@ fun TorangBottomSheetScaffold(
             onOffset.invoke((it / density).dp)
         }
     }
-    //}
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
