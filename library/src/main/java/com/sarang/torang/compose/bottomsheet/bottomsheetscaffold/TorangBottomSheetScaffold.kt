@@ -2,10 +2,15 @@ package com.sarang.torang.compose.bottomsheet.bottomsheetscaffold
 
 import android.util.Log
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.BottomSheetDefaults
@@ -25,6 +30,7 @@ import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -32,11 +38,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 /**
@@ -101,6 +107,17 @@ fun TorangBottomSheetScaffold(
     val coroutine = rememberCoroutineScope()
     val density = LocalDensity.current.density
 
+    val context = LocalContext.current
+    val displayMetrics = context.resources.displayMetrics
+    val screenHeightPx = displayMetrics.heightPixels // 화면 높이 (픽셀 단위)
+    val height = screenHeightPx
+
+
+    var bottomSheetOffset: Float by remember { mutableFloatStateOf(0f) }
+    val alpha = ((height - 200) - bottomSheetOffset) / (height * 2)
+
+
+
     if (show) {
         BackHandler {
             coroutine.launch {
@@ -118,6 +135,15 @@ fun TorangBottomSheetScaffold(
                 }
             }
     }
+
+    LaunchedEffect(key1 = scaffoldState.bottomSheetState) {
+        snapshotFlow { scaffoldState.bottomSheetState.requireOffset() }
+            .collect {
+                bottomSheetOffset = it
+            }
+    }
+
+
 
     LaunchedEffect(key1 = show) {
         if (show) {
@@ -152,7 +178,28 @@ fun TorangBottomSheetScaffold(
         snackbarHost = snackbarHost,
         containerColor = containerColor,
         contentColor = contentColor,
-        content = content
+        content = {
+            content.invoke(it)
+            if (alpha > 0.1)
+                Box(
+                    Modifier
+                        .background(Color.Black.copy(alpha = alpha))
+                        .fillMaxSize()
+                        .clickable(
+                            indication = null,
+                            interactionSource = remember { MutableInteractionSource() }
+                        ) {
+                            if (scaffoldState.bottomSheetState.currentValue != SheetValue.Hidden) {
+                                coroutine.launch {
+                                    scaffoldState.bottomSheetState.hide()
+                                }
+                            }
+                        }
+                ) {
+
+
+                }
+        }
     )
 
     LaunchedEffect(key1 = show) {
@@ -168,16 +215,16 @@ fun TorangBottomSheetScaffold(
 @Preview
 @Composable
 fun PreviewTorangBottomSheetScaffold() {
-    val snackbarHostState = remember { SnackbarHostState() }
+    val snackBarHostState = remember { SnackbarHostState() }
     val coroutine = rememberCoroutineScope()
-    var data by remember { mutableStateOf("") }
+    val data by remember { mutableStateOf("") }
     var show by remember { mutableStateOf(false) }
     TorangBottomSheetScaffold(/*Preview*/
+        modifier = Modifier.fillMaxSize(),
         sheetPeekHeight = 350.dp,
         snackbarHost = { SnackbarHost(hostState = it) },
         show = show,
         onHidden = {
-            Log.d("__PreviewTorangBottomSheetScaffold", "onHidden")
             show = false
         },
         content = {
@@ -198,7 +245,7 @@ fun PreviewTorangBottomSheetScaffold() {
                 Text(text = "aaaaa")
                 Button(onClick = {
                     coroutine.launch {
-                        snackbarHostState.showSnackbar("cccc")
+                        snackBarHostState.showSnackbar("cccc")
                     }
                 }
                 ) {
