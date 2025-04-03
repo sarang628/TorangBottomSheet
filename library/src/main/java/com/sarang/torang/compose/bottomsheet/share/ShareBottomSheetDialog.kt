@@ -20,28 +20,49 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.sarang.torang.compose.bottomsheet.share.components.ItemShareList
+import com.sarang.torang.compose.bottomsheet.share.components.ShareSearchBar
+import com.sarang.torang.uistate.FeedMenuUiState
+import com.sarang.torang.uistate.ShareDialogUiState
 import com.sarang.torang.viewmodels.ShareViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ShareBottomSheetDialog(profileServerUrl: String, isExpand: Boolean, onSelect: (String) -> Unit, onClose: () -> Unit, shareViewModel: ShareViewModel = hiltViewModel())
-{
+fun ShareBottomSheetDialog(
+    shareViewModel: ShareViewModel = hiltViewModel(),
+    profileServerUrl: String,
+    isExpand: Boolean,
+    onSelect: (String) -> Unit,
+    onClose: () -> Unit,
+) {
+    val uiState by shareViewModel.uiState.collectAsState()
+    _ShareBottomSheetDialog(uiState, profileServerUrl, isExpand, onSelect, onClose)
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun _ShareBottomSheetDialog(
+    uiState: ShareDialogUiState,
+    profileServerUrl: String,
+    isExpand: Boolean,
+    onSelect: (String) -> Unit,
+    onClose: () -> Unit,
+) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-    val scope = rememberCoroutineScope()
     var showBottomSheet by remember { mutableStateOf(isExpand) }
 
-    val uiState by shareViewModel.uiState.collectAsState()
-
-    if (showBottomSheet)
-    {
+    if (showBottomSheet) {
         ModalBottomSheet(onDismissRequest = {
             showBottomSheet = false
             onClose.invoke()
         }, sheetState = sheetState) {
-            Column(Modifier
+            Column(
+                Modifier
                     .fillMaxWidth()
-                    .padding(start = 10.dp, end = 10.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+                    .padding(start = 10.dp, end = 10.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
                 ShareSearchBar()
                 Spacer(modifier = Modifier.height(8.dp))
                 ItemShareList(list = uiState.list, profileServerUrl)
@@ -52,7 +73,12 @@ fun ShareBottomSheetDialog(profileServerUrl: String, isExpand: Boolean, onSelect
 
 @Preview
 @Composable
-fun PreviewShareBottomSheetDialog()
-{
-    ShareBottomSheetDialog(isExpand = true, onSelect = {}, onClose = {}, profileServerUrl = "http://sarang628.iptime.org:89/profile_images/")
+fun PreviewShareBottomSheetDialog() {
+    _ShareBottomSheetDialog(
+        uiState = ShareDialogUiState(list = listOf()),
+        isExpand = true,
+        onSelect = {},
+        onClose = {},
+        profileServerUrl = "http://sarang628.iptime.org:89/profile_images/"
+    )
 }

@@ -180,7 +180,7 @@ fun TorangBottomSheetScaffold(
         contentColor = contentColor,
         content = {
             content.invoke(it)
-            if (alpha > 0.1)
+            if (alpha > 0.1) // 알파값이 0.1 보다 크다면 보여짐
                 Box(
                     Modifier
                         .background(Color.Black.copy(alpha = alpha))
@@ -195,10 +195,7 @@ fun TorangBottomSheetScaffold(
                                 }
                             }
                         }
-                ) {
-
-
-                }
+                )
         }
     )
 

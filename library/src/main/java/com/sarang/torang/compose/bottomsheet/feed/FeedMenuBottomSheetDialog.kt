@@ -18,6 +18,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.sarang.torang.compose.bottomsheet.feed.components.MyMenu
+import com.sarang.torang.compose.bottomsheet.feed.components.ReportMenu
+import com.sarang.torang.uistate.FeedMenuUiState
 import com.sarang.torang.viewmodels.FeedMenuViewModel
 
 
@@ -38,6 +41,21 @@ fun FeedMenuBottomSheetDialog(
     })
 
     val uiState by viewModel.uiState.collectAsState()
+
+    _FeedMenuBottomSheetDialog(uiState, isExpand, reviewId, onReport, onDelete, onEdit, onClose)
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun _FeedMenuBottomSheetDialog(
+    uiState: FeedMenuUiState,
+    isExpand: Boolean,
+    reviewId: Int,
+    onReport: () -> Unit,
+    onDelete: () -> Unit,
+    onEdit: () -> Unit,
+    onClose: () -> Unit
+) {
     val sheetState = rememberModalBottomSheetState(
         skipPartiallyExpanded = true
     )
@@ -72,7 +90,8 @@ fun FeedMenuBottomSheetDialog(
 @Preview
 @Composable
 fun PreviewFeedMenuBottomSheetDialog() {
-    FeedMenuBottomSheetDialog(/*preview*/
+    _FeedMenuBottomSheetDialog(/*preview*/
+        uiState = FeedMenuUiState(),
         isExpand = true,
         onReport = {},
         onDelete = {},

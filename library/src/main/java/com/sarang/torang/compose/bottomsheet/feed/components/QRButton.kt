@@ -1,4 +1,4 @@
-package com.sarang.torang.compose.bottomsheet.feed
+package com.sarang.torang.compose.bottomsheet.feed.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.dp
 import com.sarang.torang.R
 
 @Composable
-fun SaveButton(size: Dp) {
+fun QRButton(size: Dp) {
     Box()
     {
         Box(
@@ -32,12 +32,12 @@ fun SaveButton(size: Dp) {
             modifier = Modifier
                 .clip(CircleShape)
                 .background(Color.White)
-                .size((size - 3.dp))
+                .size(size - 3.dp)
                 .align(Alignment.Center)
         )
 
         Image(
-            painter = painterResource(id = R.drawable.save),
+            painter = painterResource(id = R.drawable.qr),
             contentDescription = "",
             modifier = Modifier
                 .align(Alignment.Center)
@@ -48,6 +48,6 @@ fun SaveButton(size: Dp) {
 
 @Preview
 @Composable
-fun PreviewSaveButton() {
-    SaveButton(size = 50.dp)
+fun PreviewQRButton() {
+    QRButton(size = 50.dp)
 }

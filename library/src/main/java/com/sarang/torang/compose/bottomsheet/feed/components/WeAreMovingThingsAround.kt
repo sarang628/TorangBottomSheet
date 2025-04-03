@@ -1,4 +1,4 @@
-package com.sarang.torang.compose.bottomsheet.feed
+package com.sarang.torang.compose.bottomsheet.feed.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column

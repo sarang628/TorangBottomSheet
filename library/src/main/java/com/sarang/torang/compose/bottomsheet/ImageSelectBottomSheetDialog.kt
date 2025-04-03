@@ -33,7 +33,7 @@ fun ImageSelectBottomSheetScaffold(
     TorangBottomSheetScaffold(
         scaffoldState = rememberBottomSheetScaffoldState(
             bottomSheetState = rememberStandardBottomSheetState(
-                initialValue = SheetValue.Hidden, // SheetValue.Hidden 설정 시 초기에 안내려 감
+                initialValue = SheetValue.Hidden,
                 skipHiddenState = false
             )
         ),
@@ -59,7 +59,9 @@ fun PreviewImageSelectBottomSheetDialog() {
         ImageSelectBottomSheetScaffold(
             show = show,
             onHidden = { show = false },
-            imageSelectCompose = {}
+            imageSelectCompose = {
+                Text("imageSelectCompose")
+            }
         ) {
             Box(modifier = Modifier.fillMaxSize()) {
                 Button(onClick = { show = true }) {

@@ -1,4 +1,4 @@
-package com.sarang.torang.compose.bottomsheet.share
+package com.sarang.torang.compose.bottomsheet.share.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

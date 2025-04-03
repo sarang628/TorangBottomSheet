@@ -84,7 +84,7 @@ fun FolderListBottomSheetDialog(
 
 @Preview
 @Composable
-fun test() {
+fun PreviewFolderListBottomSheetDialog() {
     FolderListBottomSheetDialog(isExpand = true, onSelect = {
 
     }, list = ArrayList<String>().apply {
