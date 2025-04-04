@@ -67,21 +67,18 @@ fun ModalBottomSheetPractice1() {
 
         if (showBottomSheet) {
             ModalBottomSheet(
-                onDismissRequest = {
-                    showBottomSheet = false
-                },
+                onDismissRequest = { showBottomSheet = false },
                 sheetState = sheetState
             ) {
                 // Sheet content
-                Button(onClick = {
-                    scope.launch { sheetState.hide() }.invokeOnCompletion {
-                        if (!sheetState.isVisible) {
-                            showBottomSheet = false
-                        }
-                    }
-                }) {
-                    Text("Hide bottom sheet")
-                }
+                Button(
+                    onClick = {
+                        scope.launch { sheetState.hide() }
+                            .invokeOnCompletion {
+                                if (!sheetState.isVisible) showBottomSheet = false
+                            }
+                    },
+                    content = { Text("Hide bottom sheet") })
             }
         }
     }
@@ -92,31 +89,27 @@ fun ModalBottomSheetPractice1() {
 @Composable
 fun PartialBottomSheet() {
     var showBottomSheet by remember { mutableStateOf(false) }
-    val sheetState = rememberModalBottomSheetState(
-        skipPartiallyExpanded = true,
-    )
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
     Column(
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Button(
-            onClick = { showBottomSheet = true }
-        ) {
+        Button(onClick = { showBottomSheet = true }) {
             Text("Display partial bottom sheet")
         }
 
-        if (showBottomSheet) {
-            ModalBottomSheet(
-                modifier = Modifier.fillMaxHeight(),
-                sheetState = sheetState,
-                onDismissRequest = { showBottomSheet = false }
-            ) {
-                Text(
-                    "Swipe up to open sheet. Swipe down to dismiss.",
-                    modifier = Modifier.padding(16.dp)
-                )
-            }
+        if (!showBottomSheet) return@Column // bottom sheet를 표시 하지 않는다면 return
+
+        ModalBottomSheet(
+            modifier = Modifier.fillMaxHeight(),
+            sheetState = sheetState,
+            onDismissRequest = { showBottomSheet = false }
+        ) {
+            Text(
+                "Swipe up to open sheet. Swipe down to dismiss.",
+                modifier = Modifier.padding(16.dp)
+            )
         }
     }
 }

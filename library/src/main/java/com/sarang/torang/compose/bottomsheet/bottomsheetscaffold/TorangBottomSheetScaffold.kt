@@ -45,7 +45,12 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 
+
 /**
+ * # Bottom Sheet Scaffold의 custom compose
+ *
+ * <b>Bottom Sheet Scaffold의 기능을 테스트하며 응용해 만든 custom compose</b>
+ *
  * <a href="https://m3.material.io/components/bottom-sheets/overview" class="external" target="_blank">Material Design standard bottom sheet scaffold</a>.
  *
  * material design 의 표준 bottom sheet
@@ -55,54 +60,35 @@ import kotlinx.coroutines.launch
  * 예제
  * @sample androidx.compose.material3.samples.SimpleBottomSheetScaffoldSample
  *
- * @param sheetContent sheet안에 들어갈 UI
  * @param modifier
- * @param scaffoldState bottom sheet scaffold 의 상태
- * @param sheetPeekHeight 접혔을 때 높이
- * @param sheetMaxWidth 가로 최대 길이. 설정 않으면 최대
- * @param sheetShape bottom sheet 모양
- * @param sheetContainerColor bottom sheet의 배경 색상
- * @param sheetContentColor bottom sheet의 자식 색상.
- * [sheetContainerColor] 과 일치하는 색상이 기본값, or theme에서 설정한 색상이 아니라면, bottom sheet에 설정된 색상과 동일하게 적용.
- * @param sheetTonalElevation bottom sheet의 tonal elevation
- * @param sheetShadowElevation bottom sheet의 shadow elevation
- * @param sheetDragHandle scaffold's bottom sheet를 당기는 visual marker
- * @param sheetSwipeEnabled 사용자 swipe 가능 여부
- * @param topBar 화면의 topBar
- * @param snackbarHost SnackBar 설정 할 수 있는 영역
- * @param containerColor scaffold의 배경색.
- * @param contentColor scaffold 안에 색생을 설정하고 싶을 경우.기본적으로 [containerColor]로 설정, 그렇지 않으면 [LocalContentColor]
- * @param expandOption
- * @param content 안에 내용. 람다에서 받는 [PaddingValues] 루트의 [Modifier.padding] 과 [Modifier.consumeWindowInsets] 에 적용.
- * 만약 [Modifier.verticalScroll] 사용한다면, 스크롤에 적용하기.
+ * @param show bottom sheet 보임 여부
+ * @param sheetPeekHeight 당겨졌을  때 높이
+ * @param sheetContent sheet안에 들어갈 UI
+ * @param snackbarHost SnackBar 설정
+ * @param onHidden 숨겨졌을 때 이벤트 콜백
+ * @param onOffset 시트의 높이 여백
+ * @param expandOption 시트 확장 옵션
+ * @param content 시트 바깥의 내용
  */
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TorangBottomSheetScaffold(
     modifier: Modifier = Modifier,
+    show: Boolean = false,
     sheetPeekHeight: Dp = BottomSheetDefaults.SheetPeekHeight,
-    sheetContainerColor: Color = BottomSheetDefaults.ContainerColor,
-    sheetContentColor: Color = contentColorFor(sheetContainerColor),
-    containerColor: Color = MaterialTheme.colorScheme.surface,
-    contentColor: Color = contentColorFor(containerColor),
-    topBar: @Composable (() -> Unit)? = null,
-    sheetTonalElevation: Dp = BottomSheetDefaults.Elevation,
-    sheetShadowElevation: Dp = BottomSheetDefaults.Elevation,
     sheetContent: @Composable ColumnScope.() -> Unit,
     snackbarHost: @Composable (SnackbarHostState) -> Unit = { SnackbarHost(it) },
-    scaffoldState: BottomSheetScaffoldState = rememberBottomSheetScaffoldState(
-        bottomSheetState = rememberStandardBottomSheetState(
-            initialValue = SheetValue.Hidden,
-            skipHiddenState = false
-        )
-    ),
-    show: Boolean = false,
     onHidden: (() -> Unit) = {},
     onOffset: (Dp) -> Unit = {},
     expandOption: SheetValue = SheetValue.Expanded,
     content: @Composable (PaddingValues) -> Unit,
 ) {
+    val scaffoldState: BottomSheetScaffoldState = rememberBottomSheetScaffoldState(
+        bottomSheetState = rememberStandardBottomSheetState(
+            initialValue = SheetValue.Hidden,
+            skipHiddenState = false
+        )
+    )
     val TAG = "__TorangCommentBottomSheetScaffold"
     val coroutine = rememberCoroutineScope()
     val density = LocalDensity.current.density
@@ -118,7 +104,7 @@ fun TorangBottomSheetScaffold(
 
 
 
-    if (show) {
+    if (show) { // 바텀 시트가 열려 
         BackHandler {
             coroutine.launch {
                 scaffoldState.bottomSheetState.hide()
@@ -126,7 +112,7 @@ fun TorangBottomSheetScaffold(
         }
     }
 
-    LaunchedEffect(key1 = scaffoldState.bottomSheetState.currentValue) {
+    LaunchedEffect(key1 = scaffoldState.bottomSheetState.currentValue) { // 숨김 이벤트 감지
         snapshotFlow { scaffoldState.bottomSheetState.currentValue }
             .collect {
                 if (it == SheetValue.Hidden && show) {
@@ -136,7 +122,7 @@ fun TorangBottomSheetScaffold(
             }
     }
 
-    LaunchedEffect(key1 = scaffoldState.bottomSheetState) {
+    LaunchedEffect(key1 = scaffoldState.bottomSheetState) { // 바텀 시트의 높이. 딤 처리를 위함
         snapshotFlow { scaffoldState.bottomSheetState.requireOffset() }
             .collect {
                 bottomSheetOffset = it
@@ -145,7 +131,7 @@ fun TorangBottomSheetScaffold(
 
 
 
-    LaunchedEffect(key1 = show) {
+    LaunchedEffect(key1 = show) { // show 변수에 따라 bottom sheet 보임 처리
         if (show) {
             Log.d(TAG, "call expand")
             if (expandOption == SheetValue.Expanded) {
@@ -168,16 +154,9 @@ fun TorangBottomSheetScaffold(
         sheetContent = sheetContent,
         sheetPeekHeight = sheetPeekHeight,
         sheetShape = BottomSheetDefaults.ExpandedShape,
-        sheetContainerColor = sheetContainerColor,
-        sheetContentColor = sheetContentColor,
-        sheetTonalElevation = sheetTonalElevation,
-        sheetShadowElevation = sheetShadowElevation,
         sheetDragHandle = { BottomSheetDefaults.DragHandle() },
         sheetSwipeEnabled = true,
-        topBar = topBar,
         snackbarHost = snackbarHost,
-        containerColor = containerColor,
-        contentColor = contentColor,
         content = {
             content.invoke(it)
             if (alpha > 0.1) // 알파값이 0.1 보다 크다면 보여짐

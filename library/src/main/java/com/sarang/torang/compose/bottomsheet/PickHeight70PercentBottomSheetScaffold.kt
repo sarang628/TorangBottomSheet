@@ -7,8 +7,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberBottomSheetScaffoldState
-import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -22,7 +20,7 @@ import com.sarang.torang.compose.bottomsheet.bottomsheetscaffold.TorangBottomShe
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ImageSelectBottomSheetScaffold(
+fun PickHeight70PercentBottomSheetScaffold(
     show: Boolean,
     onHidden: () -> Unit,
     imageSelectCompose: @Composable () -> Unit,
@@ -31,12 +29,6 @@ fun ImageSelectBottomSheetScaffold(
     val screenHeight = LocalConfiguration.current.screenHeightDp
 
     TorangBottomSheetScaffold(
-        scaffoldState = rememberBottomSheetScaffoldState(
-            bottomSheetState = rememberStandardBottomSheetState(
-                initialValue = SheetValue.Hidden,
-                skipHiddenState = false
-            )
-        ),
         show = show,
         sheetPeekHeight = screenHeight.dp * 0.7f,
         sheetContent = {
@@ -56,7 +48,7 @@ fun ImageSelectBottomSheetScaffold(
 fun PreviewImageSelectBottomSheetDialog() {
     var show by remember { mutableStateOf(false) }
     Box(modifier = Modifier.fillMaxSize()) {
-        ImageSelectBottomSheetScaffold(
+        PickHeight70PercentBottomSheetScaffold(
             show = show,
             onHidden = { show = false },
             imageSelectCompose = {
