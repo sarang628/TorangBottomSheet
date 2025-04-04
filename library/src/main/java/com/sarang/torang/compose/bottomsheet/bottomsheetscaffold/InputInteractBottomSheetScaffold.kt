@@ -100,6 +100,8 @@ fun InputInteractBottomSheetScaffold(
 @Preview(showBackground = true)
 @Composable
 fun PreviewInputInteractBottomSheetScaffold() {
+    var show by remember { mutableStateOf(true) }
+
     InputInteractBottomSheetScaffold(
         modifier = Modifier
             .fillMaxSize(),
@@ -118,8 +120,11 @@ fun PreviewInputInteractBottomSheetScaffold() {
             }
 
         },
+        onHidden = {
+            show = false
+        },
         inputHiddenOffset = 100.dp,
-        show = true
+        show = show
     ) {
         Text("!@#!@#")
     }

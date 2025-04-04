@@ -12,7 +12,7 @@ import androidx.compose.ui.tooling.preview.Preview
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CommentBottomSheetDialog(
+fun PartiallyModalBottomSheet(
     isExpand: Boolean,
     onClose: () -> Unit,
     commentList: @Composable () -> Unit
@@ -37,8 +37,8 @@ fun CommentBottomSheetDialog(
 
 @Preview
 @Composable
-fun PreviewCommentBottomSheetDialog() {
-    CommentBottomSheetDialog(
+fun PreviewPartiallyModalBottomSheet() {
+    PartiallyModalBottomSheet(
         isExpand = true,
         onClose = {}
     ) {

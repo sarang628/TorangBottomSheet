@@ -30,16 +30,16 @@ import androidx.navigation.compose.rememberNavController
 import com.google.samples.apps.sunflower.ui.TorangTheme
 import com.sarang.torang.compose.bottomsheet.PickHeight70PercentBottomSheetScaffold
 import com.sarang.torang.compose.bottomsheet.PreviewCloseDetectBottomSheetScaffold
-import com.sarang.torang.compose.bottomsheet.PreviewCommentBottomSheetDialog
-import com.sarang.torang.compose.bottomsheet.PreviewFolderListBottomSheetDialog
+import com.sarang.torang.compose.bottomsheet.PreviewPartiallyModalBottomSheet
+import com.sarang.torang.compose.bottomsheet.PreviewSimpleTextListBottomSheetScaffold
 import com.sarang.torang.compose.bottomsheet.bottomsheetscaffold.PreviewTorangBottomSheetScaffold
 import com.sarang.torang.compose.bottomsheet.bottomsheetscaffold.PreviewInputInteractBottomSheetScaffold
 import com.sarang.torang.compose.bottomsheet.bottomsheetscaffold.InputInteractBottomSheetScaffold
 import com.sarang.torang.compose.bottomsheet.bottomsheetscaffold.TorangModalBottomSheet
-import com.sarang.torang.compose.bottomsheet.feed.PreviewFeedMenuBottomSheetDialog
+import com.sarang.torang.compose.bottomsheet.feed.PreviewFeedMenuModalBottomSheet
 import com.sarang.torang.compose.bottomsheet.practice.ModalBottomSheetPractice1
 import com.sarang.torang.compose.bottomsheet.practice.PartialBottomSheet
-import com.sarang.torang.compose.bottomsheet.share.PreviewShareBottomSheetDialog
+import com.sarang.torang.compose.bottomsheet.share.PreviewShareModalBottomSheet
 import com.sarang.torang.repository.FeedRepository
 import com.sarang.torang.repository.LoginRepository
 import dagger.hilt.android.AndroidEntryPoint
@@ -92,17 +92,23 @@ fun TestNavigation() {
                         Text("PartialBottomSheet")
                     }
                     HorizontalDivider()
-                    Text("application")
-                    Button({
-                        navController.navigate("PickHeight70PercentBottomSheetScaffold")
-                    }) {
-                        Text("PickHeight70PercentBottomSheetScaffold")
-                    }
-
+                    Text("basic application")
                     Button({
                         navController.navigate("TorangBottomSheetScaffold")
                     }) {
                         Text("TorangBottomSheetScaffold")
+                    }
+                    Button({
+                        navController.navigate("TorangModalBottomSheet")
+                    }) {
+                        Text("TorangModalBottomSheet")
+                    }
+                    HorizontalDivider()
+                    Text("torang application")
+                    Button({
+                        navController.navigate("PickHeight70PercentBottomSheetScaffold")
+                    }) {
+                        Text("PickHeight70PercentBottomSheetScaffold")
                     }
 
                     Button({
@@ -112,21 +118,15 @@ fun TestNavigation() {
                     }
 
                     Button({
-                        navController.navigate("TorangModalBottomSheet")
+                        navController.navigate("FeedMenuModalBottomSheet")
                     }) {
-                        Text("TorangModalBottomSheet")
+                        Text("FeedMenuModalBottomSheet")
                     }
 
                     Button({
-                        navController.navigate("FeedMenuBottomSheetDialog")
+                        navController.navigate("ShareModalBottomSheet")
                     }) {
-                        Text("FeedMenuBottomSheetDialog")
-                    }
-
-                    Button({
-                        navController.navigate("ShareBottomSheetDialog")
-                    }) {
-                        Text("ShareBottomSheetDialog")
+                        Text("ShareModalBottomSheet")
                     }
 
                     Button({
@@ -136,19 +136,14 @@ fun TestNavigation() {
                     }
 
                     Button({
-                        navController.navigate("CommentBottomSheetDialog")
+                        navController.navigate("PartiallyModalBottomSheet")
                     }) {
-                        Text("CommentBottomSheetDialog")
+                        Text("PartiallyModalBottomSheet")
                     }
                     Button({
-                        navController.navigate("FolderListBottomSheetDialog")
+                        navController.navigate("SimpleTextListBottomSheetScaffold")
                     }) {
-                        Text("FolderListBottomSheetDialog")
-                    }
-                    Button({
-                        navController.navigate("ImageSelectBottomSheetScaffold")
-                    }) {
-                        Text("ImageSelectBottomSheetScaffold")
+                        Text("SimpleTextListBottomSheetScaffold")
                     }
                 }
 
@@ -171,25 +166,21 @@ fun TestNavigation() {
             composable("TorangModalBottomSheet") {
                 TorangModalBottomSheet()
             }
-            composable("FeedMenuBottomSheetDialog") {
-                PreviewFeedMenuBottomSheetDialog()
+            composable("FeedMenuModalBottomSheet") {
+                PreviewFeedMenuModalBottomSheet()
             }
-            composable("ShareBottomSheetDialog") {
-                PreviewShareBottomSheetDialog()
+            composable("ShareModalBottomSheet") {
+                PreviewShareModalBottomSheet()
             }
             composable("CloseDetectBottomSheetScaffold") {
                 PreviewCloseDetectBottomSheetScaffold()
             }
-            composable("CommentBottomSheetDialog") {
-                PreviewCommentBottomSheetDialog()
+            composable("PartiallyModalBottomSheet") {
+                PreviewPartiallyModalBottomSheet()
             }
-            composable("FolderListBottomSheetDialog") {
-                PreviewFolderListBottomSheetDialog()
+            composable("SimpleTextListBottomSheetScaffold") {
+                PreviewSimpleTextListBottomSheetScaffold()
             }
-            composable("ImageSelectBottomSheetScaffold") {
-                PreviewPickHeight70PercentBottomSheetScaffold()
-            }
-
         }
     }
 }

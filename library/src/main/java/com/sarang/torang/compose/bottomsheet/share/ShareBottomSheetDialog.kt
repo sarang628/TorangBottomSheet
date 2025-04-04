@@ -13,7 +13,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -22,14 +21,12 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.sarang.torang.compose.bottomsheet.share.components.ItemShareList
 import com.sarang.torang.compose.bottomsheet.share.components.ShareSearchBar
-import com.sarang.torang.uistate.FeedMenuUiState
 import com.sarang.torang.uistate.ShareDialogUiState
 import com.sarang.torang.viewmodels.ShareViewModel
 
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ShareBottomSheetDialog(
+fun ShareModalBottomSheet(
     shareViewModel: ShareViewModel = hiltViewModel(),
     profileServerUrl: String,
     isExpand: Boolean,
@@ -37,12 +34,12 @@ fun ShareBottomSheetDialog(
     onClose: () -> Unit,
 ) {
     val uiState by shareViewModel.uiState.collectAsState()
-    _ShareBottomSheetDialog(uiState, profileServerUrl, isExpand, onSelect, onClose)
+    _ShareModalBottomSheet(uiState, profileServerUrl, isExpand, onSelect, onClose)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun _ShareBottomSheetDialog(
+fun _ShareModalBottomSheet(
     uiState: ShareDialogUiState,
     profileServerUrl: String,
     isExpand: Boolean,
@@ -73,8 +70,8 @@ fun _ShareBottomSheetDialog(
 
 @Preview
 @Composable
-fun PreviewShareBottomSheetDialog() {
-    _ShareBottomSheetDialog(
+fun PreviewShareModalBottomSheet() {
+    _ShareModalBottomSheet(
         uiState = ShareDialogUiState(list = listOf()),
         isExpand = true,
         onSelect = {},

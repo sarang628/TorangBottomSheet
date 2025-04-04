@@ -1,6 +1,5 @@
 package com.sarang.torang.compose.bottomsheet
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -25,7 +24,7 @@ import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FolderListBottomSheetDialog(
+fun SimpleTextListBottomSheetScaffold(
     isExpand: Boolean,
     onSelect: (String) -> Unit,
     list: List<String>
@@ -33,10 +32,8 @@ fun FolderListBottomSheetDialog(
     val scope = rememberCoroutineScope()
     val scaffoldState = rememberBottomSheetScaffoldState()
 
-    LaunchedEffect(key1 = "", block = {
+    LaunchedEffect(key1 = isExpand, block = {
         if (isExpand) {
-            Log.d("FolderListBottomSheetDialog", "!!!!")
-//            scaffoldState.bottomSheetState.partialExpand()
             scaffoldState.bottomSheetState.expand()
         }
     })
@@ -84,8 +81,8 @@ fun FolderListBottomSheetDialog(
 
 @Preview
 @Composable
-fun PreviewFolderListBottomSheetDialog() {
-    FolderListBottomSheetDialog(isExpand = true, onSelect = {
+fun PreviewSimpleTextListBottomSheetScaffold() {
+    SimpleTextListBottomSheetScaffold(isExpand = true, onSelect = {
 
     }, list = ArrayList<String>().apply {
         add("a")

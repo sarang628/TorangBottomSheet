@@ -23,10 +23,11 @@ import com.sarang.torang.compose.bottomsheet.feed.components.ReportMenu
 import com.sarang.torang.uistate.FeedMenuUiState
 import com.sarang.torang.viewmodels.FeedMenuViewModel
 
-
-@OptIn(ExperimentalMaterial3Api::class)
+/**
+ * 피드 메뉴 bottom sheet
+ */
 @Composable
-fun FeedMenuBottomSheetDialog(
+fun FeedMenuModalBottomSheet(
     viewModel: FeedMenuViewModel = hiltViewModel(),
     isExpand: Boolean,
     reviewId: Int,
@@ -42,15 +43,14 @@ fun FeedMenuBottomSheetDialog(
 
     val uiState by viewModel.uiState.collectAsState()
 
-    _FeedMenuBottomSheetDialog(uiState, isExpand, reviewId, onReport, onDelete, onEdit, onClose)
+    _FeedMenuModalBottomSheet(uiState, isExpand, onReport, onDelete, onEdit, onClose)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun _FeedMenuBottomSheetDialog(
+fun _FeedMenuModalBottomSheet(
     uiState: FeedMenuUiState,
     isExpand: Boolean,
-    reviewId: Int,
     onReport: () -> Unit,
     onDelete: () -> Unit,
     onEdit: () -> Unit,
@@ -89,14 +89,13 @@ fun _FeedMenuBottomSheetDialog(
 
 @Preview
 @Composable
-fun PreviewFeedMenuBottomSheetDialog() {
-    _FeedMenuBottomSheetDialog(/*preview*/
+fun PreviewFeedMenuModalBottomSheet() {
+    _FeedMenuModalBottomSheet(/*preview*/
         uiState = FeedMenuUiState(),
         isExpand = true,
         onReport = {},
         onDelete = {},
         onEdit = {},
-        onClose = {},
-        reviewId = 117
+        onClose = {}
     )
 }

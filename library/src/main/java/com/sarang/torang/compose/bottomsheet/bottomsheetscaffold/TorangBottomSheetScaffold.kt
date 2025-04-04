@@ -2,6 +2,7 @@ package com.sarang.torang.compose.bottomsheet.bottomsheetscaffold
 
 import android.util.Log
 import androidx.activity.compose.BackHandler
+import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -102,24 +103,60 @@ fun TorangBottomSheetScaffold(
     var bottomSheetOffset: Float by remember { mutableFloatStateOf(0f) }
     val alpha = ((height - 200) - bottomSheetOffset) / (height * 2)
 
+    val backPressedDispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
+    var backHandlerEnabled by remember { mutableStateOf(true) }
 
 
-    if (show) { // 바텀 시트가 열려 
-        BackHandler {
-            coroutine.launch {
+    BackHandler(enabled = backHandlerEnabled) {
+        coroutine.launch {
+            if (scaffoldState.bottomSheetState.isVisible) {
                 scaffoldState.bottomSheetState.hide()
+            } else {
+                backHandlerEnabled = false // 먼저 상태를 비활성화
             }
         }
     }
 
-    LaunchedEffect(key1 = scaffoldState.bottomSheetState.currentValue) { // 숨김 이벤트 감지
-        snapshotFlow { scaffoldState.bottomSheetState.currentValue }
-            .collect {
-                if (it == SheetValue.Hidden && show) {
-                    Log.d(TAG, "onHidden")
-                    onHidden.invoke()
-                }
+    // BackHandler 비활성화 후 시스템 뒤로 가기 호출
+    LaunchedEffect(backHandlerEnabled) {
+        if (!backHandlerEnabled) {
+            backPressedDispatcher?.onBackPressed()
+        }
+    }
+
+    LaunchedEffect(key1 = show) { // show 변수에 따라 bottom sheet 보임 처리
+        if (show && scaffoldState.bottomSheetState.currentValue == SheetValue.Hidden) {
+            Log.i(TAG, "call expand")
+            if (expandOption == SheetValue.Expanded
+            ) {
+                scaffoldState.bottomSheetState.expand()
+            } else {
+                scaffoldState.bottomSheetState.partialExpand()
             }
+        } else if (!show && scaffoldState.bottomSheetState.currentValue != SheetValue.Hidden) {
+            if (scaffoldState.bottomSheetState.currentValue == SheetValue.Expanded
+                || scaffoldState.bottomSheetState.currentValue == SheetValue.PartiallyExpanded
+            ) {
+                scaffoldState.bottomSheetState.hide()
+            }
+        } else {
+            Log.e(
+                TAG,
+                "wrong state sheet. currantValue: ${scaffoldState.bottomSheetState.currentValue.name}, show: ${show}"
+            )
+        }
+    }
+
+    LaunchedEffect(key1 = scaffoldState.bottomSheetState.currentValue) { // 숨김 이벤트 감지
+        if (scaffoldState.bottomSheetState.currentValue == SheetValue.Expanded)
+            snapshotFlow { scaffoldState.bottomSheetState.currentValue }
+                .collect {
+                    Log.d(TAG, it.name)
+                    if (it == SheetValue.Hidden && show) {
+                        Log.d(TAG, "onHidden")
+                        onHidden.invoke()
+                    }
+                }
     }
 
     LaunchedEffect(key1 = scaffoldState.bottomSheetState) { // 바텀 시트의 높이. 딤 처리를 위함
@@ -127,25 +164,6 @@ fun TorangBottomSheetScaffold(
             .collect {
                 bottomSheetOffset = it
             }
-    }
-
-
-
-    LaunchedEffect(key1 = show) { // show 변수에 따라 bottom sheet 보임 처리
-        if (show) {
-            Log.d(TAG, "call expand")
-            if (expandOption == SheetValue.Expanded) {
-                scaffoldState.bottomSheetState.expand()
-            } else {
-                scaffoldState.bottomSheetState.partialExpand()
-            }
-        } else {
-            if (scaffoldState.bottomSheetState.currentValue == SheetValue.Expanded
-                || scaffoldState.bottomSheetState.currentValue == SheetValue.PartiallyExpanded
-            ) {
-                scaffoldState.bottomSheetState.hide()
-            }
-        }
     }
 
     BottomSheetScaffold(
