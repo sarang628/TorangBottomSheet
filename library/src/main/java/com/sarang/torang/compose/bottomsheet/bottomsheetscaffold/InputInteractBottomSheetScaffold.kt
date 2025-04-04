@@ -2,6 +2,7 @@ package com.sarang.torang.compose.bottomsheet.bottomsheetscaffold
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.absoluteOffset
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.BottomSheetDefaults
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -114,6 +116,7 @@ fun PreviewInputInteractBottomSheetScaffold() {
                 value = "aaa",
                 onValueChange = {})
         },
+        sheetPeekHeight = 200.dp,
         sheetContent = {
             Box(Modifier.fillMaxSize()) {
                 Text("!!")
@@ -123,9 +126,14 @@ fun PreviewInputInteractBottomSheetScaffold() {
         onHidden = {
             show = false
         },
-        inputHiddenOffset = 100.dp,
+        inputHiddenOffset = 200.dp,
         show = show
     ) {
-        Text("!@#!@#")
+        Column {
+            Text("PreviewInputInteractBottomSheetScaffold")
+            Button({ show = true }) {
+                Text(if (!show) "Show" else "Hide")
+            }
+        }
     }
 }

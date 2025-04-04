@@ -221,7 +221,7 @@ fun PreviewPickHeight70PercentBottomSheetScaffold() {
         ) {
             Box(modifier = Modifier.fillMaxSize()) {
                 Button(onClick = { show = true }) {
-                    Text(text = "ImageSelectBottomSheetScaffold")
+                    Text(text = "PickHeight70PercentBottomSheetScaffold")
                 }
             }
         }

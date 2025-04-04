@@ -148,15 +148,15 @@ fun TorangBottomSheetScaffold(
     }
 
     LaunchedEffect(key1 = scaffoldState.bottomSheetState.currentValue) { // 숨김 이벤트 감지
-        if (scaffoldState.bottomSheetState.currentValue == SheetValue.Expanded)
-            snapshotFlow { scaffoldState.bottomSheetState.currentValue }
-                .collect {
-                    Log.d(TAG, it.name)
-                    if (it == SheetValue.Hidden && show) {
-                        Log.d(TAG, "onHidden")
-                        onHidden.invoke()
-                    }
+        snapshotFlow { scaffoldState.bottomSheetState.currentValue }
+            .collect {
+                if (it == SheetValue.Hidden && show) {
+                    Log.d(TAG, "onHidden")
+                    onHidden.invoke()
+                } else {
+                    Log.i(TAG, "currentValue = ${it.name} show:${show}")
                 }
+            }
     }
 
     LaunchedEffect(key1 = scaffoldState.bottomSheetState) { // 바텀 시트의 높이. 딤 처리를 위함
@@ -177,7 +177,7 @@ fun TorangBottomSheetScaffold(
         snackbarHost = snackbarHost,
         content = {
             content.invoke(it)
-            if (alpha > 0.1) // 알파값이 0.1 보다 크다면 보여짐
+            if (alpha > 0.01) // 알파값이 0.1 보다 크다면 보여짐
                 Box(
                     Modifier
                         .background(Color.Black.copy(alpha = alpha))
