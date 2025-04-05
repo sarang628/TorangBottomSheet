@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.absoluteOffset
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.Button
@@ -49,7 +50,7 @@ import androidx.compose.ui.unit.dp
  * @param input
  * @param sheetPeekHeight 접혔을 때 높이
  * @param sheetContent sheet안에 들어갈 UI
- * @param inputHiddenOffset
+ * @param criterionHeight
  * @param snackbarHost SnackBar 설정 할 수 있는 영역
  * @param onHidden
  * @param content 안에 내용. 람다에서 받는 [PaddingValues] 루트의 [Modifier.padding] 과 [Modifier.consumeWindowInsets] 에 적용.
@@ -62,21 +63,22 @@ fun InputInteractBottomSheetScaffold(
     input: @Composable () -> Unit,
     sheetPeekHeight: Dp = BottomSheetDefaults.SheetPeekHeight,
     sheetContent: @Composable ColumnScope.() -> Unit,
-    inputHiddenOffset: Dp,
+    criterionHeight: Dp,
     snackbarHost: @Composable (SnackbarHostState) -> Unit = { SnackbarHost(it) },
     onHidden: (() -> Unit) = {},
     content: @Composable (PaddingValues) -> Unit,
 ) {
-    var offset by remember { mutableStateOf(0.dp) }
-    val inputOffset = if ((LocalConfiguration.current.screenHeightDp.dp //화면의 높이에서
-                - offset // botton sheet의 높이를 뺀 값이
-                ) < inputHiddenOffset // 기준값 보다 작다면
+    var bottomSheetHeight by remember { mutableStateOf(0.dp) }
+    val screenHeight = LocalConfiguration.current.screenHeightDp.dp
+
+    val inputOffset = if ((screenHeight//화면의 높이에서
+                - bottomSheetHeight // botton sheet의 높이를 뺀 값이
+                ) < criterionHeight // 기준값 보다 작다면
     ) {
-        // inputOffset을 내려 input 창을 함께 내린다.
-        inputHiddenOffset - (LocalConfiguration.current.screenHeightDp.dp - offset)
+        criterionHeight - (screenHeight - bottomSheetHeight) // inputOffset을 내려 input 창을 함께 내린다.
     } else 0.dp
 
-    Box(modifier = modifier) {
+    Box(modifier = modifier.imePadding()) { // edge to edge 에서 imePadding을 줘야 하단 영역이 적용됨
         TorangBottomSheetScaffold(
             sheetContent = sheetContent,
             sheetPeekHeight = sheetPeekHeight,
@@ -84,7 +86,7 @@ fun InputInteractBottomSheetScaffold(
             content = content,
             show = show,
             onHidden = onHidden,
-            onOffset = { offset = it }
+            onOffset = { bottomSheetHeight = it }
         )
         if (show)
             Box(
@@ -126,7 +128,7 @@ fun PreviewInputInteractBottomSheetScaffold() {
         onHidden = {
             show = false
         },
-        inputHiddenOffset = 200.dp,
+        criterionHeight = 150.dp,
         show = show
     ) {
         Column {

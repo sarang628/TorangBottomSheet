@@ -56,7 +56,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+        //enableEdgeToEdge()
         setContent {
             TorangTheme {
                 Surface(
@@ -198,7 +198,7 @@ fun InputInteractBottomSheetScaffoldTest() {
         input = { OutlinedTextField(value = "", onValueChange = {}) },
         show = show,
         sheetContent = { Box(Modifier.fillMaxHeight()) },
-        inputHiddenOffset = 200.dp,
+        criterionHeight = 200.dp,
         onHidden = { show = false },
         content = {
             Column(
