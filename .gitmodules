@@ -1,9 +1,9 @@
-[submodule "gradle/TorangToml"]
-	path = gradle/TorangToml
-	url = https://github.com/sarang628/TorangToml.git
 [submodule "app/src/main/java/com/sarang/torang/di/repository"]
 	path = app/src/main/java/com/sarang/torang/di/repository
 	url = https://github.com/sarang628/repository.git
 [submodule "app/src/main/java/com/sarang/torang/di/bottomsheet_di"]
 	path = app/src/main/java/com/sarang/torang/di/bottomsheet_di
 	url = https://github.com/sarang628/bottomsheet_di.git
+[submodule "gradle/TorangToml"]
+	path = gradle/TorangToml
+	url = https://github.com/sarang628/TorangToml.git
