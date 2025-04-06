@@ -89,6 +89,7 @@ fun TorangBottomSheetScaffold(
             skipHiddenState = false
         )
     )
+
     val TAG = "__TorangBottomSheetScaffold"
     val coroutine = rememberCoroutineScope()
     val density = LocalDensity.current.density
@@ -146,6 +147,10 @@ fun TorangBottomSheetScaffold(
     LaunchedEffect(key1 = scaffoldState.bottomSheetState.currentValue) { // 숨김 이벤트 감지
         snapshotFlow { scaffoldState.bottomSheetState.currentValue }
             .collect {
+                if (it == SheetValue.Hidden) {
+                    Log.d(TAG, "${it.name}, ${scaffoldState.bottomSheetState.requireOffset().dp}")
+                }
+
                 if (it == SheetValue.Hidden && show) {
                     Log.d(TAG, "onHidden")
                     onHidden.invoke()

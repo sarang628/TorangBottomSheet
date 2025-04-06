@@ -56,7 +56,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //enableEdgeToEdge()
+        enableEdgeToEdge()
         setContent {
             TorangTheme {
                 Surface(
@@ -97,6 +97,7 @@ fun TestNavigation() {
                         HorizontalDivider()
                         Text("basic application")
                         Button({
+                            /** 클릭 시 이동 [PreviewTorangBottomSheetScaffold] */
                             navController.navigate("TorangBottomSheetScaffold")
                         }) {
                             Text("TorangBottomSheetScaffold")
@@ -115,6 +116,7 @@ fun TestNavigation() {
                         }
 
                         Button({
+                            /** [PreviewInputInteractBottomSheetScaffold] */
                             navController.navigate("InputInteractBottomSheetScaffold")
                         }) {
                             Text("InputInteractBottomSheetScaffold")
