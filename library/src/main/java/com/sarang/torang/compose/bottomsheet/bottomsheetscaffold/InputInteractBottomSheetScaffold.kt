@@ -91,10 +91,8 @@ fun InputInteractBottomSheetScaffold(
         if (show)
             Box(
                 modifier = Modifier
-                    .align(
-                        Alignment.BottomCenter
-                    )
-                    .absoluteOffset(y = inputOffset)
+                    .align(Alignment.BottomCenter)
+                    .absoluteOffset(y = inputOffset),
             ) {
                 input.invoke()
             }
@@ -123,11 +121,8 @@ fun PreviewInputInteractBottomSheetScaffold() {
             Box(Modifier.fillMaxSize()) {
                 Text("!!")
             }
-
         },
-        onHidden = {
-            show = false
-        },
+        onHidden = { show = false },
         criterionHeight = 150.dp,
         show = show
     ) {

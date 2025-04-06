@@ -14,12 +14,12 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.BottomSheetScaffoldState
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SheetValue
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -37,6 +37,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
@@ -88,18 +89,15 @@ fun TorangBottomSheetScaffold(
             skipHiddenState = false
         )
     )
-    val TAG = "__TorangCommentBottomSheetScaffold"
+    val TAG = "__TorangBottomSheetScaffold"
     val coroutine = rememberCoroutineScope()
     val density = LocalDensity.current.density
 
     val context = LocalContext.current
-    val displayMetrics = context.resources.displayMetrics
-    val screenHeightPx = displayMetrics.heightPixels // 화면 높이 (픽셀 단위)
-    val height = screenHeightPx
-
-
-    var bottomSheetOffset: Float by remember { mutableFloatStateOf(0f) }
-    val alpha = ((height - 200) - bottomSheetOffset) / (height * 2)
+    val offset = 200
+    val height = context.resources.displayMetrics.heightPixels - offset // 화면 높이 (픽셀 단위)
+    var sheetHeight: Float by remember { mutableFloatStateOf(0f) }
+    val alpha = (height - sheetHeight) / (height * 2)
 
     val backPressedDispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
     var backHandlerEnabled by remember { mutableStateOf(true) }
@@ -152,7 +150,12 @@ fun TorangBottomSheetScaffold(
                     Log.d(TAG, "onHidden")
                     onHidden.invoke()
                 } else {
-                    Log.i(TAG, "currentValue = ${it.name} show:${show}")
+                    Log.i(
+                        TAG,
+                        """currentValue: ${it.name} 
+                          |targetValue: ${scaffoldState.bottomSheetState.targetValue} 
+                          |show: ${show}""".trimMargin()
+                    )
                 }
             }
     }
@@ -160,8 +163,13 @@ fun TorangBottomSheetScaffold(
     LaunchedEffect(key1 = scaffoldState.bottomSheetState) { // 바텀 시트의 높이. 딤 처리를 위함
         snapshotFlow { scaffoldState.bottomSheetState.requireOffset() }
             .collect {
-                bottomSheetOffset = it
+                sheetHeight = it
             }
+    }
+
+    val containerColor = LogColorInHex()
+    LaunchedEffect(containerColor) {
+        Log.d(TAG, "containerColor: ${containerColor}")
     }
 
     BottomSheetScaffold(
@@ -246,4 +254,11 @@ fun PreviewTorangBottomSheetScaffold() {
             }
         }
     )
+}
+
+@Composable
+fun LogColorInHex(): String {
+    val color = MaterialTheme.colorScheme.surface
+    val hex = "#" + Integer.toHexString(color.toArgb()).padStart(8, '0').uppercase()
+    return hex
 }
