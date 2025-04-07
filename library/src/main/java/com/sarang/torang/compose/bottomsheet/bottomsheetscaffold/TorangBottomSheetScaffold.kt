@@ -41,8 +41,10 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.sarang.torang.util.TorangBottomSheetDebugLog
 import kotlinx.coroutines.launch
 
 
@@ -80,6 +82,7 @@ fun TorangBottomSheetScaffold(
     snackbarHost: @Composable (SnackbarHostState) -> Unit = { SnackbarHost(it) },
     onHidden: (() -> Unit) = {},
     onOffset: (Dp) -> Unit = {},
+    onMaxBottonSheetHeight: (Dp) -> Unit = {},
     expandOption: SheetValue = SheetValue.Expanded,
     content: @Composable (PaddingValues) -> Unit,
 ) {
@@ -99,6 +102,7 @@ fun TorangBottomSheetScaffold(
     val height = context.resources.displayMetrics.heightPixels - offset // 화면 높이 (픽셀 단위)
     var sheetHeight: Float by remember { mutableFloatStateOf(0f) }
     val alpha = (height - sheetHeight) / (height * 2)
+    var maxBottomSheetHeight by remember { mutableStateOf(0.dp) }
 
     val backPressedDispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
     var backHandlerEnabled by remember { mutableStateOf(true) }
@@ -108,38 +112,53 @@ fun TorangBottomSheetScaffold(
         coroutine.launch {
             if (scaffoldState.bottomSheetState.isVisible) {
                 scaffoldState.bottomSheetState.hide()
+                TorangBottomSheetDebugLog.d(TAG, "call back. call hide()")
             } else {
                 backHandlerEnabled = false // 먼저 상태를 비활성화
             }
         }
     }
 
-    // BackHandler 비활성화 후 시스템 뒤로 가기 호출
-    LaunchedEffect(backHandlerEnabled) {
+    LaunchedEffect(backHandlerEnabled) { // BackHandler 비활성화 후 시스템 뒤로 가기 호출
         if (!backHandlerEnabled) {
             backPressedDispatcher?.onBackPressed()
+            TorangBottomSheetDebugLog.d(TAG, "call back. call backPressed()")
+        }
+    }
+
+    LaunchedEffect(key1 = show) {
+        snapshotFlow {
+            scaffoldState.bottomSheetState.requireOffset() / density
+        }.collect {
+            if (maxBottomSheetHeight > 0.dp) {
+                onOffset.invoke(maxBottomSheetHeight - it.dp)
+            }
         }
     }
 
     LaunchedEffect(key1 = show) { // show 변수에 따라 bottom sheet 보임 처리
-        if (show && scaffoldState.bottomSheetState.currentValue == SheetValue.Hidden) {
-            Log.i(TAG, "call expand")
-            if (expandOption == SheetValue.Expanded
-            ) {
-                scaffoldState.bottomSheetState.expand()
+        if (scaffoldState.bottomSheetState.currentValue == SheetValue.Hidden) {
+            if (show) {
+                TorangBottomSheetDebugLog.d(TAG, "require show. operate")
+                if (expandOption == SheetValue.Expanded) {
+                    scaffoldState.bottomSheetState.expand()
+                } else {
+                    scaffoldState.bottomSheetState.partialExpand()
+                }
             } else {
-                scaffoldState.bottomSheetState.partialExpand()
+                Log.e(TAG, "require show false. but state already Hidden.")
             }
         } else if (!show && scaffoldState.bottomSheetState.currentValue != SheetValue.Hidden) {
             if (scaffoldState.bottomSheetState.currentValue == SheetValue.Expanded
                 || scaffoldState.bottomSheetState.currentValue == SheetValue.PartiallyExpanded
             ) {
                 scaffoldState.bottomSheetState.hide()
+                TorangBottomSheetDebugLog.d(TAG, "show changed: ${show} call hide()")
             }
         } else {
             Log.e(
                 TAG,
-                "wrong state sheet. currantValue: ${scaffoldState.bottomSheetState.currentValue.name}, show: ${show}"
+                """state sheet is wrong. currantValue: ${scaffoldState.bottomSheetState.currentValue.name} show: ${show}""".trimMargin()
             )
         }
     }
@@ -147,19 +166,20 @@ fun TorangBottomSheetScaffold(
     LaunchedEffect(key1 = scaffoldState.bottomSheetState.currentValue) { // 숨김 이벤트 감지
         snapshotFlow { scaffoldState.bottomSheetState.currentValue }
             .collect {
-                if (it == SheetValue.Hidden) {
-                    Log.d(TAG, "${it.name}, ${scaffoldState.bottomSheetState.requireOffset().dp}")
+                if (it == SheetValue.Hidden && maxBottomSheetHeight == 0.dp) {
+                    maxBottomSheetHeight = scaffoldState.bottomSheetState.requireOffsetDp(density)
+                    onMaxBottonSheetHeight.invoke(maxBottomSheetHeight)
+
+                    Log.d(TAG, "detect maxBottomSheetHeight: ${maxBottomSheetHeight}")
                 }
 
                 if (it == SheetValue.Hidden && show) {
                     Log.d(TAG, "onHidden")
                     onHidden.invoke()
                 } else {
-                    Log.i(
+                    TorangBottomSheetDebugLog.d(
                         TAG,
-                        """currentValue: ${it.name} 
-                          |targetValue: ${scaffoldState.bottomSheetState.targetValue} 
-                          |show: ${show}""".trimMargin()
+                        """bottom sheeet currentValue changed. currentValue: ${it.name} targetValue: ${scaffoldState.bottomSheetState.targetValue}  show: ${show}""".trimMargin()
                     )
                 }
             }
@@ -172,19 +192,18 @@ fun TorangBottomSheetScaffold(
             }
     }
 
-    val containerColor = LogColorInHex()
-    LaunchedEffect(containerColor) {
-        Log.d(TAG, "containerColor: ${containerColor}")
-    }
-
     BottomSheetScaffold(
         modifier = modifier,
         scaffoldState = scaffoldState,
         sheetContent = sheetContent,
-        sheetPeekHeight = sheetPeekHeight,
+        sheetPeekHeight = if (sheetPeekHeight <= 0.dp) {
+            Log.e(TAG, "sheetPeekHeight is less than or equal to 0. set default value.")
+            BottomSheetDefaults.SheetPeekHeight
+        } else {
+            sheetPeekHeight
+        },
         sheetShape = BottomSheetDefaults.ExpandedShape,
         sheetDragHandle = { BottomSheetDefaults.DragHandle() },
-        sheetSwipeEnabled = true,
         snackbarHost = snackbarHost,
         content = {
             content.invoke(it)
@@ -206,14 +225,6 @@ fun TorangBottomSheetScaffold(
                 )
         }
     )
-
-    LaunchedEffect(key1 = show) {
-        snapshotFlow {
-            scaffoldState.bottomSheetState.requireOffset()
-        }.collect {
-            onOffset.invoke((it / density).dp)
-        }
-    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -261,9 +272,8 @@ fun PreviewTorangBottomSheetScaffold() {
     )
 }
 
-@Composable
-fun LogColorInHex(): String {
-    val color = MaterialTheme.colorScheme.surface
-    val hex = "#" + Integer.toHexString(color.toArgb()).padStart(8, '0').uppercase()
-    return hex
+
+@OptIn(ExperimentalMaterial3Api::class)
+fun androidx.compose.material3.SheetState.requireOffsetDp(density: Float): Dp {
+    return (this.requireOffset() / density).dp
 }

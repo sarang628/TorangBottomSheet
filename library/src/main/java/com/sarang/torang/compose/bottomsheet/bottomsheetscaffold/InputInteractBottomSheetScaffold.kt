@@ -1,20 +1,16 @@
 package com.sarang.torang.compose.bottomsheet.bottomsheetscaffold
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.absoluteOffset
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBars
-import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SnackbarHost
@@ -23,22 +19,22 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.sarang.torang.util.TorangBottomSheetDebugLog
 
 
 /**
  * @param modifier
- * @param show
+ * @param show bottom sheet 표시여부. 주의! 처음 상태를 true로 설정 하지 않기. 오류 발생(수정 해야함)
  * @param input
  * @param sheetPeekHeight 접혔을 때 높이
  * @param sheetContent sheet안에 들어갈 UI
@@ -62,33 +58,27 @@ fun InputInteractBottomSheetScaffold(
 ) {
     val TAG = "__InputInteractBottomSheetScaffold"
 
-    val insets = WindowInsets.systemBars
-    val density = LocalDensity.current
     val dragHandlerHeight = 50.dp
-    val systemBarHeightDp =
-        with(density) { (insets.getTop(density) + insets.getBottom(density)).toDp() }
-    var bottomSheetHeight by remember { mutableStateOf(0.dp) }
-    val screenHeight = LocalConfiguration.current.screenHeightDp.dp + systemBarHeightDp
+    var maxBottomSheetHeight by remember { mutableStateOf(0.dp) }
+    var currentBottomSheetHeight by remember { mutableStateOf(0.dp) }
     val criterionHeightWithDragHandlerHeight = criterionHeight + dragHandlerHeight
 
-    val inputOffset = if ((screenHeight//화면의 높이에서
-                - bottomSheetHeight // botton sheet의 높이를 뺀 값이
-                ) < criterionHeightWithDragHandlerHeight // 기준값 보다 작다면
-    ) {
-        criterionHeightWithDragHandlerHeight - (screenHeight - bottomSheetHeight) // inputOffset을 내려 input 창을 함께 내린다.
-    } else 0.dp
-
-    Log.d(TAG, "screenHeight: ${screenHeight}, bottomSheetHeight: ${bottomSheetHeight}")
+    val inputOffset =
+        if (currentBottomSheetHeight < criterionHeightWithDragHandlerHeight //  현재 bottom sheet 높이가 기준값 보다 작다면
+        ) {
+            criterionHeightWithDragHandlerHeight - currentBottomSheetHeight // inputOffset을 내려 input 창을 함께 내린다.
+        } else 0.dp
 
     Box(modifier = modifier.imePadding()) { // edge to edge 에서 imePadding을 줘야 하단 영역이 적용됨
         TorangBottomSheetScaffold(
             sheetContent = sheetContent,
-            sheetPeekHeight = screenHeight / 100 * sheetPeekHeightPercent,
+            sheetPeekHeight = maxBottomSheetHeight / 100 * sheetPeekHeightPercent,
             snackbarHost = snackbarHost,
             content = content,
             show = show,
             onHidden = onHidden,
-            onOffset = { bottomSheetHeight = it }
+            onOffset = { currentBottomSheetHeight = it },
+            onMaxBottonSheetHeight = { maxBottomSheetHeight = it }
         )
         if (show) // sheet가 보이면 input 영역 보이기
             Box(
@@ -104,7 +94,7 @@ fun InputInteractBottomSheetScaffold(
 @Preview(showBackground = true)
 @Composable
 fun PreviewInputInteractBottomSheetScaffold() {
-    var show by remember { mutableStateOf(true) }
+    var show by remember { mutableStateOf(false) }
 
     InputInteractBottomSheetScaffold(
         modifier = Modifier
