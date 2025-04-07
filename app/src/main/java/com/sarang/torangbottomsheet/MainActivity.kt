@@ -32,8 +32,8 @@ import com.sarang.torang.compose.bottomsheet.PickHeight70PercentBottomSheetScaff
 import com.sarang.torang.compose.bottomsheet.PreviewCloseDetectBottomSheetScaffold
 import com.sarang.torang.compose.bottomsheet.PreviewPartiallyModalBottomSheet
 import com.sarang.torang.compose.bottomsheet.PreviewSimpleTextListBottomSheetScaffold
-import com.sarang.torang.compose.bottomsheet.bottomsheetscaffold.InputInteractBottomSheetScaffold
-import com.sarang.torang.compose.bottomsheet.bottomsheetscaffold.PreviewInputInteractBottomSheetScaffold
+import com.sarang.torang.compose.bottomsheet.bottomsheetscaffold.FixedInputBottomSheetScaffold
+import com.sarang.torang.compose.bottomsheet.bottomsheetscaffold.PreviewFixedInputBottomSheetScaffold
 import com.sarang.torang.compose.bottomsheet.bottomsheetscaffold.PreviewTorangBottomSheetScaffold
 import com.sarang.torang.compose.bottomsheet.bottomsheetscaffold.TorangModalBottomSheet
 import com.sarang.torang.compose.bottomsheet.feed.PreviewFeedMenuModalBottomSheet
@@ -116,10 +116,10 @@ fun TestNavigation() {
                         }
 
                         Button({
-                            /** [PreviewInputInteractBottomSheetScaffold] */
-                            navController.navigate("InputInteractBottomSheetScaffold")
+                            /** [PreviewFixedInputBottomSheetScaffold] */
+                            navController.navigate("FixedInputBottomSheetScaffold")
                         }) {
-                            Text("InputInteractBottomSheetScaffold")
+                            Text("FixedInputBottomSheetScaffold")
                         }
 
                         Button({
@@ -166,8 +166,8 @@ fun TestNavigation() {
             composable("TorangBottomSheetScaffold") {
                 PreviewTorangBottomSheetScaffold()
             }
-            composable("InputInteractBottomSheetScaffold") {
-                PreviewInputInteractBottomSheetScaffold()
+            composable("FixedInputBottomSheetScaffold") {
+                PreviewFixedInputBottomSheetScaffold()
             }
             composable("TorangModalBottomSheet") {
                 TorangModalBottomSheet()
@@ -196,11 +196,11 @@ fun TestNavigation() {
 @Composable
 fun InputInteractBottomSheetScaffoldTest() {
     var show by remember { mutableStateOf(false) }
-    InputInteractBottomSheetScaffold(
+    FixedInputBottomSheetScaffold(
         input = { OutlinedTextField(value = "", onValueChange = {}) },
         show = show,
         sheetContent = { Box(Modifier.fillMaxHeight()) },
-        criterionHeight = 200.dp,
+        inputHeight = 200.dp,
         onHidden = { show = false },
         content = {
             Column(

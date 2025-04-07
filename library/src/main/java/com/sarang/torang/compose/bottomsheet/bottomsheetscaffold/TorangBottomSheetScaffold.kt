@@ -19,7 +19,6 @@ import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.BottomSheetScaffoldState
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SheetValue
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -37,11 +36,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.sarang.torang.util.TorangBottomSheetDebugLog
@@ -82,7 +79,7 @@ fun TorangBottomSheetScaffold(
     snackbarHost: @Composable (SnackbarHostState) -> Unit = { SnackbarHost(it) },
     onHidden: (() -> Unit) = {},
     onOffset: (Dp) -> Unit = {},
-    onMaxBottonSheetHeight: (Dp) -> Unit = {},
+    onMaxBottomSheetHeight: (Dp) -> Unit = {},
     expandOption: SheetValue = SheetValue.Expanded,
     content: @Composable (PaddingValues) -> Unit,
 ) {
@@ -168,7 +165,7 @@ fun TorangBottomSheetScaffold(
             .collect {
                 if (it == SheetValue.Hidden && maxBottomSheetHeight == 0.dp) {
                     maxBottomSheetHeight = scaffoldState.bottomSheetState.requireOffsetDp(density)
-                    onMaxBottonSheetHeight.invoke(maxBottomSheetHeight)
+                    onMaxBottomSheetHeight.invoke(maxBottomSheetHeight)
 
                     Log.d(TAG, "detect maxBottomSheetHeight: ${maxBottomSheetHeight}")
                 }
