@@ -1,6 +1,5 @@
 package com.sarang.torang.compose.bottomsheet.bottomsheetscaffold
 
-import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.foundation.background
@@ -41,7 +40,6 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.sarang.torang.util.TorangBottomSheetDebugLog
 import kotlinx.coroutines.launch
 
 
@@ -91,7 +89,6 @@ fun TorangBottomSheetScaffold(
     )
 
     val TAG = "__TorangBottomSheetScaffold"
-    val coroutine = rememberCoroutineScope()
     val density = LocalDensity.current.density
 
     val context = LocalContext.current
@@ -101,100 +98,22 @@ fun TorangBottomSheetScaffold(
     val alpha = (height - sheetHeight) / (height * 2)
     var maxBottomSheetHeight by remember { mutableStateOf(0.dp) }
 
-    val backPressedDispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
-    var backHandlerEnabled by remember { mutableStateOf(true) }
+    val coroutine = rememberCoroutineScope()
 
+    HandleBack(scaffoldState)
+    HandleOffset(show, scaffoldState, density, maxBottomSheetHeight, onOffset)
+    HandleExpand(show, scaffoldState, expandOption)
+    HandleHidden(scaffoldState, density, {
+        maxBottomSheetHeight = it; onMaxBottomSheetHeight(it)
+    }, onHidden, show)
+    HandleOnHeight(scaffoldState) { sheetHeight = it }
 
-    BackHandler(enabled = backHandlerEnabled) {
-        coroutine.launch {
-            if (scaffoldState.bottomSheetState.isVisible) {
-                scaffoldState.bottomSheetState.hide()
-                TorangBottomSheetDebugLog.d(TAG, "call back. call hide()")
-            } else {
-                backHandlerEnabled = false // 먼저 상태를 비활성화
-            }
-        }
-    }
-
-    LaunchedEffect(backHandlerEnabled) { // BackHandler 비활성화 후 시스템 뒤로 가기 호출
-        if (!backHandlerEnabled) {
-            backPressedDispatcher?.onBackPressed()
-            TorangBottomSheetDebugLog.d(TAG, "call back. call backPressed()")
-        }
-    }
-
-    LaunchedEffect(key1 = show) {
-        snapshotFlow {
-            scaffoldState.bottomSheetState.requireOffset() / density
-        }.collect {
-            if (maxBottomSheetHeight > 0.dp) {
-                onOffset.invoke(maxBottomSheetHeight - it.dp)
-            }
-        }
-    }
-
-    LaunchedEffect(key1 = show) { // show 변수에 따라 bottom sheet 보임 처리
-        if (scaffoldState.bottomSheetState.currentValue == SheetValue.Hidden) {
-            if (show) {
-                TorangBottomSheetDebugLog.d(TAG, "require show. operate")
-                if (expandOption == SheetValue.Expanded) {
-                    scaffoldState.bottomSheetState.expand()
-                } else {
-                    scaffoldState.bottomSheetState.partialExpand()
-                }
-            } else {
-                Log.e(TAG, "require show false. but state already Hidden.")
-            }
-        } else if (!show && scaffoldState.bottomSheetState.currentValue != SheetValue.Hidden) {
-            if (scaffoldState.bottomSheetState.currentValue == SheetValue.Expanded
-                || scaffoldState.bottomSheetState.currentValue == SheetValue.PartiallyExpanded
-            ) {
-                scaffoldState.bottomSheetState.hide()
-                TorangBottomSheetDebugLog.d(TAG, "show changed: ${show} call hide()")
-            }
-        } else {
-            Log.e(
-                TAG,
-                """state sheet is wrong. currantValue: ${scaffoldState.bottomSheetState.currentValue.name} show: ${show}""".trimMargin()
-            )
-        }
-    }
-
-    LaunchedEffect(key1 = scaffoldState.bottomSheetState.currentValue) { // 숨김 이벤트 감지
-        snapshotFlow { scaffoldState.bottomSheetState.currentValue }
-            .collect {
-                if (it == SheetValue.Hidden && maxBottomSheetHeight == 0.dp) {
-                    maxBottomSheetHeight = scaffoldState.bottomSheetState.requireOffsetDp(density)
-                    onMaxBottomSheetHeight.invoke(maxBottomSheetHeight)
-
-                    Log.d(TAG, "detect maxBottomSheetHeight: ${maxBottomSheetHeight}")
-                }
-
-                if (it == SheetValue.Hidden && show) {
-                    Log.d(TAG, "onHidden")
-                    onHidden.invoke()
-                } else {
-                    TorangBottomSheetDebugLog.d(
-                        TAG,
-                        """bottom sheeet currentValue changed. currentValue: ${it.name} targetValue: ${scaffoldState.bottomSheetState.targetValue}  show: ${show}""".trimMargin()
-                    )
-                }
-            }
-    }
-
-    LaunchedEffect(key1 = scaffoldState.bottomSheetState) { // 바텀 시트의 높이. 딤 처리를 위함
-        snapshotFlow { scaffoldState.bottomSheetState.requireOffset() }
-            .collect {
-                sheetHeight = it
-            }
-    }
 
     BottomSheetScaffold(
         modifier = modifier,
         scaffoldState = scaffoldState,
         sheetContent = sheetContent,
         sheetPeekHeight = if (sheetPeekHeight <= 0.dp) {
-            Log.e(TAG, "sheetPeekHeight is less than or equal to 0. set default value.")
             BottomSheetDefaults.SheetPeekHeight
         } else {
             sheetPeekHeight
@@ -225,6 +144,116 @@ fun TorangBottomSheetScaffold(
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun HandleHidden(
+    scaffoldState: BottomSheetScaffoldState,
+    density: Float,
+    onMaxBottomSheetHeight: (Dp) -> Unit = {},
+    onHidden: (() -> Unit) = {},
+    show : Boolean = false
+) {
+    var maxBottomSheetHeight by remember { mutableStateOf(0.dp) }
+    LaunchedEffect(key1 = scaffoldState.bottomSheetState.currentValue) { // 숨김 이벤트 감지
+        snapshotFlow { scaffoldState.bottomSheetState.currentValue }
+            .collect {
+                if (it == SheetValue.Hidden && maxBottomSheetHeight == 0.dp) {
+                    maxBottomSheetHeight = scaffoldState.bottomSheetState.requireOffsetDp(density)
+                    onMaxBottomSheetHeight.invoke(maxBottomSheetHeight)
+
+                }
+
+                if (it == SheetValue.Hidden && show) {
+                    onHidden.invoke()
+                }
+            }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun HandleOnHeight(scaffoldState: BottomSheetScaffoldState, onHeight: (Float) -> Unit) {
+    LaunchedEffect(key1 = scaffoldState.bottomSheetState) { // 바텀 시트의 높이. 딤 처리를 위함
+        snapshotFlow { scaffoldState.bottomSheetState.requireOffset() }
+            .collect {
+                onHeight.invoke(it)
+            }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun HandleExpand(
+    show: Boolean,
+    scaffoldState: BottomSheetScaffoldState,
+    expandOption: SheetValue
+) {
+    val TAG = "__HandleExpand"
+    LaunchedEffect(key1 = show) { // show 변수에 따라 bottom sheet 보임 처리
+        if (scaffoldState.bottomSheetState.currentValue == SheetValue.Hidden) {
+            if (show) {
+                if (expandOption == SheetValue.Expanded) {
+                    scaffoldState.bottomSheetState.expand()
+                } else {
+                    scaffoldState.bottomSheetState.partialExpand()
+                }
+            }
+        } else if (!show && scaffoldState.bottomSheetState.currentValue != SheetValue.Hidden) {
+            if (scaffoldState.bottomSheetState.currentValue == SheetValue.Expanded
+                || scaffoldState.bottomSheetState.currentValue == SheetValue.PartiallyExpanded
+            ) {
+                scaffoldState.bottomSheetState.hide()
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun HandleBack(scaffoldState: BottomSheetScaffoldState) {
+    val backPressedDispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
+    var backHandlerEnabled by remember { mutableStateOf(true) }
+    val coroutine = rememberCoroutineScope()
+    val TAG = "__HandleBack"
+
+    BackHandler(enabled = backHandlerEnabled) {
+        coroutine.launch {
+            if (scaffoldState.bottomSheetState.isVisible) {
+                scaffoldState.bottomSheetState.hide()
+            } else {
+                backHandlerEnabled = false // 먼저 상태를 비활성화
+            }
+        }
+    }
+
+    LaunchedEffect(backHandlerEnabled) { // BackHandler 비활성화 후 시스템 뒤로 가기 호출
+        if (!backHandlerEnabled) {
+            backPressedDispatcher?.onBackPressed()
+        }
+    }
+}
+
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun HandleOffset(
+    show: Boolean,
+    scaffoldState: BottomSheetScaffoldState,
+    density: Float,
+    maxBottomSheetHeight: Dp,
+    onOffset: (Dp) -> Unit
+) {
+    LaunchedEffect(key1 = show) {
+        snapshotFlow {
+            scaffoldState.bottomSheetState.requireOffset() / density
+        }.collect {
+            if (maxBottomSheetHeight > 0.dp) {
+                onOffset.invoke(maxBottomSheetHeight - it.dp)
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
 fun PreviewTorangBottomSheetScaffold() {
@@ -237,9 +266,7 @@ fun PreviewTorangBottomSheetScaffold() {
         sheetPeekHeight = 350.dp,
         snackbarHost = { SnackbarHost(hostState = it) },
         show = show,
-        onHidden = {
-            show = false
-        },
+        onHidden = { show = false },
         content = {
             Column(
                 Modifier
@@ -257,13 +284,9 @@ fun PreviewTorangBottomSheetScaffold() {
             Column(Modifier.fillMaxHeight()) {
                 Text(text = "aaaaa")
                 Button(onClick = {
-                    coroutine.launch {
-                        snackBarHostState.showSnackbar("cccc")
-                    }
+                    coroutine.launch { snackBarHostState.showSnackbar("cccc") }
                 }
-                ) {
-                    Text(text = "$data")
-                }
+                ) { Text(text = "$data") }
             }
         }
     )
