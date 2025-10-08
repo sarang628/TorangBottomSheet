@@ -74,11 +74,11 @@ fun FixedInputBottomSheetScaffold(
             onOffset = { currentBottomSheetHeight = it },
             onMaxBottomSheetHeight = { maxBottomSheetHeight = it }
         )
-        if (show) // sheet가 보이면 input 영역 보이기
+        if (show) // bottom sheet가 보이면 input 영역 보이기
             Box(
-                modifier = Modifier
+                Modifier
                     .align(Alignment.BottomCenter)
-                    .absoluteOffset(y = inputOffset),
+                    .absoluteOffset(y = inputOffset)
             ) {
                 input()
             }
@@ -97,7 +97,7 @@ fun PreviewFixedInputBottomSheetScaffold() {
             TextField(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(50.dp),
+                    .height(55.dp),
                 value = "input",
                 onValueChange = {})
         },
@@ -108,7 +108,7 @@ fun PreviewFixedInputBottomSheetScaffold() {
             }
         },
         onHidden = { show = false },
-        inputHeight = 50.dp,
+        inputHeight = 55.dp,
         show = show
     ) {
         Column {
