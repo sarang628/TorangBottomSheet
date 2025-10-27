@@ -20,7 +20,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.sarang.torang.compose.bottomsheet.share.components.ItemShareList
+import com.sarang.torang.compose.bottomsheet.share.components.ShareBottomMenus
 import com.sarang.torang.compose.bottomsheet.share.components.ShareSearchBar
+import com.sarang.torang.data.bottomsheet.Sample
+import com.sarang.torang.data.bottomsheet.User
 import com.sarang.torang.uistate.ShareDialogUiState
 import com.sarang.torang.viewmodels.ShareViewModel
 
@@ -28,20 +31,18 @@ import com.sarang.torang.viewmodels.ShareViewModel
 @Composable
 fun ShareModalBottomSheet(
     shareViewModel: ShareViewModel = hiltViewModel(),
-    profileServerUrl: String,
     isExpand: Boolean,
     onSelect: (String) -> Unit,
     onClose: () -> Unit,
 ) {
     val uiState by shareViewModel.uiState.collectAsState()
-    _ShareModalBottomSheet(uiState, profileServerUrl, isExpand, onSelect, onClose)
+    _ShareModalBottomSheet(uiState, isExpand, onSelect, onClose)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun _ShareModalBottomSheet(
     uiState: ShareDialogUiState,
-    profileServerUrl: String,
     isExpand: Boolean,
     onSelect: (String) -> Unit,
     onClose: () -> Unit,
@@ -62,7 +63,9 @@ fun _ShareModalBottomSheet(
             ) {
                 ShareSearchBar()
                 Spacer(modifier = Modifier.height(8.dp))
-                ItemShareList(list = uiState.list, profileServerUrl)
+                ItemShareList(list = uiState.list)
+                Spacer(modifier = Modifier.height(8.dp))
+                ShareBottomMenus()
             }
         }
     }
@@ -72,10 +75,10 @@ fun _ShareModalBottomSheet(
 @Composable
 fun PreviewShareModalBottomSheet() {
     _ShareModalBottomSheet(
-        uiState = ShareDialogUiState(list = listOf()),
+        uiState = ShareDialogUiState(
+            list = listOf(User.Sample, User.Sample, User.Sample, User.Sample, User.Sample)),
         isExpand = true,
         onSelect = {},
-        onClose = {},
-        profileServerUrl = "http://sarang628.iptime.org:89/profile_images/"
+        onClose = {}
     )
 }
