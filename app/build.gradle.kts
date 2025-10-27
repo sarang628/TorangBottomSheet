@@ -31,6 +31,10 @@ android {
         enableTransformForLocalTests = true
     }
 
+    kotlinOptions {
+        jvmTarget = "17"
+    }
+
     android.buildFeatures.buildConfig = true
 
     buildTypes {
