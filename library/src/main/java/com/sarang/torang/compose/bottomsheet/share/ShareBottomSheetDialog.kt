@@ -30,22 +30,26 @@ import com.sarang.torang.viewmodels.ShareViewModel
 
 @Composable
 fun ShareModalBottomSheet(
-    shareViewModel: ShareViewModel = hiltViewModel(),
-    isExpand: Boolean,
-    onSelect: (String) -> Unit,
-    onClose: () -> Unit,
+    shareViewModel  : ShareViewModel    = hiltViewModel(),
+    isExpand        : Boolean           = false,
+    onClose         : () -> Unit        = {},
 ) {
-    val uiState by shareViewModel.uiState.collectAsState()
-    _ShareModalBottomSheet(uiState, isExpand, onSelect, onClose)
+    val uiState : ShareDialogUiState = shareViewModel.uiState
+    _ShareModalBottomSheet(
+        uiState     = uiState,
+        isExpand    = isExpand,
+        onSelect    = { shareViewModel.select(it) },
+        onClose     = onClose,
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun _ShareModalBottomSheet(
-    uiState: ShareDialogUiState,
-    isExpand: Boolean,
-    onSelect: (String) -> Unit,
-    onClose: () -> Unit,
+    uiState : ShareDialogUiState,
+    isExpand: Boolean           = false,
+    onSelect: (Int) -> Unit     = {},
+    onClose : () -> Unit        = {},
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     var showBottomSheet by remember { mutableStateOf(isExpand) }
@@ -63,7 +67,7 @@ fun _ShareModalBottomSheet(
             ) {
                 ShareSearchBar()
                 Spacer(modifier = Modifier.height(8.dp))
-                ItemShareList(list = uiState.list)
+                ItemShareList(list = uiState.list, onClick = onSelect)
                 Spacer(modifier = Modifier.height(8.dp))
                 ShareBottomMenus()
             }
@@ -74,11 +78,8 @@ fun _ShareModalBottomSheet(
 @Preview
 @Composable
 fun PreviewShareModalBottomSheet() {
-    _ShareModalBottomSheet(
-        uiState = ShareDialogUiState(
-            list = listOf(User.Sample, User.Sample, User.Sample, User.Sample, User.Sample)),
+    ShareModalBottomSheet(
         isExpand = true,
-        onSelect = {},
         onClose = {}
     )
 }

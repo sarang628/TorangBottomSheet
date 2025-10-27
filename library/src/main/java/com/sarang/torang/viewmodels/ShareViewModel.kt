@@ -1,5 +1,8 @@
 package com.sarang.torang.viewmodels
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sarang.torang.uistate.ShareDialogUiState
@@ -16,17 +19,27 @@ class ShareViewModel @Inject constructor(
     getFollowerUseCase: GetFollowerUseCase
 ) : ViewModel()
 {
-    private val _uiState = MutableStateFlow(ShareDialogUiState(list = ArrayList()))
-    val uiState = _uiState.asStateFlow()
+    var uiState by mutableStateOf(ShareDialogUiState()); private set
+
+    fun select(userId: Int) {
+        uiState = uiState.copy(
+            list = uiState.list.map {
+                if(it.userId == userId) {
+                    it.copy(isSelected = !it.isSelected)
+                }
+                else {
+                    it
+                }
+            }
+        )
+    }
 
     init
     {
         viewModelScope.launch {
             try
             {
-                _uiState.update {
-                    it.copy(list = getFollowerUseCase.invoke())
-                }
+                uiState = uiState.copy(getFollowerUseCase.invoke())
             } catch (e: Exception)
             {
 

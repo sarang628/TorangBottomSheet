@@ -25,6 +25,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -42,6 +43,7 @@ import com.sarang.torang.compose.bottomsheet.practice.PartialBottomSheet
 import com.sarang.torang.compose.bottomsheet.share.PreviewShareModalBottomSheet
 import com.sarang.torang.repository.FeedRepository
 import com.sarang.torang.repository.LoginRepository
+import com.sarang.torang.repository.LoginRepositoryTest
 import com.sryang.torang.ui.TorangTheme
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -65,7 +67,7 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     Column(Modifier.fillMaxSize()) {
-                        TestNavigation()
+                        TestNavigation(loginRepository = loginRepository)
                     }
                 }
             }
@@ -73,124 +75,110 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-@Preview(showBackground = true)
 @Composable
-fun TestNavigation() {
+fun TestNavigation(loginRepository : LoginRepository) {
     val navController = rememberNavController()
     Box(Modifier.fillMaxSize())
     {
-        NavHost(navController, startDestination = "test") {
-            composable("test") {
-                Scaffold {
-                    Column(Modifier.padding(it)) {
-                        Text("basic")
-                        Button({
-                            navController.navigate("ModalBottomSheetPractice1")
-                        }) {
-                            Text("ModalBottomSheet")
-                        }
-                        Button({
-                            navController.navigate("PartialBottomSheet")
-                        }) {
-                            Text("PartialBottomSheet")
-                        }
-                        HorizontalDivider()
-                        Text("basic application")
-                        Button({
-                            /** 클릭 시 이동 [PreviewTorangBottomSheetScaffold] */
-                            navController.navigate("TorangBottomSheetScaffold")
-                        }) {
-                            Text("TorangBottomSheetScaffold")
-                        }
-                        Button({
-                            navController.navigate("TorangModalBottomSheet")
-                        }) {
-                            Text("TorangModalBottomSheet")
-                        }
-                        HorizontalDivider()
-                        Text("torang application")
-                        Button({
-                            navController.navigate("PickHeight70PercentBottomSheetScaffold")
-                        }) {
-                            Text("PickHeight70PercentBottomSheetScaffold")
-                        }
-
-                        Button({
-                            /** [PreviewFixedInputBottomSheetScaffold] */
-                            navController.navigate("FixedInputBottomSheetScaffold")
-                        }) {
-                            Text("FixedInputBottomSheetScaffold")
-                        }
-
-                        Button({
-                            navController.navigate("FeedMenuModalBottomSheet")
-                        }) {
-                            Text("FeedMenuModalBottomSheet")
-                        }
-
-                        Button({
-                            navController.navigate("ShareModalBottomSheet")
-                        }) {
-                            Text("ShareModalBottomSheet")
-                        }
-
-                        Button({
-                            navController.navigate("CloseDetectBottomSheetScaffold")
-                        }) {
-                            Text("CloseDetectBottomSheetScaffold")
-                        }
-
-                        Button({
-                            navController.navigate("PartiallyModalBottomSheet")
-                        }) {
-                            Text("PartiallyModalBottomSheet")
-                        }
-                        Button({
-                            navController.navigate("SimpleTextListBottomSheetScaffold")
-                        }) {
-                            Text("SimpleTextListBottomSheetScaffold")
-                        }
-                    }
-                }
-
-            }
-            composable("ModalBottomSheetPractice1") {
-                ModalBottomSheetPractice1()
-            }
-            composable("PickHeight70PercentBottomSheetScaffold") {
-                PreviewPickHeight70PercentBottomSheetScaffold()
-            }
-            composable("PartialBottomSheet") {
-                PartialBottomSheet()
-            }
-            composable("TorangBottomSheetScaffold") {
-                PreviewTorangBottomSheetScaffold()
-            }
-            composable("FixedInputBottomSheetScaffold") {
-                PreviewFixedInputBottomSheetScaffold()
-            }
-            composable("TorangModalBottomSheet") {
-                TorangModalBottomSheet()
-            }
-            composable("FeedMenuModalBottomSheet") {
-                PreviewFeedMenuModalBottomSheet()
-            }
-            composable("ShareModalBottomSheet") {
-                PreviewShareModalBottomSheet()
-            }
-            composable("CloseDetectBottomSheetScaffold") {
-                PreviewCloseDetectBottomSheetScaffold()
-            }
-            composable("PartiallyModalBottomSheet") {
-                PreviewPartiallyModalBottomSheet()
-            }
-            composable("SimpleTextListBottomSheetScaffold") {
-                PreviewSimpleTextListBottomSheetScaffold()
-            }
+        NavHost(navController, startDestination = "ShareModalBottomSheet") {
+            composable("test")                                      { test(navController) }
+            composable("LoginRepositoryTest")                       { LoginRepositoryTest(loginRepository = loginRepository) }
+            composable("ModalBottomSheetPractice1")                 { ModalBottomSheetPractice1() }
+            composable("PickHeight70PercentBottomSheetScaffold")    { PreviewPickHeight70PercentBottomSheetScaffold() }
+            composable("PartialBottomSheet")                        { PartialBottomSheet() }
+            composable("TorangBottomSheetScaffold")                 { PreviewTorangBottomSheetScaffold() }
+            composable("FixedInputBottomSheetScaffold")             { PreviewFixedInputBottomSheetScaffold() }
+            composable("TorangModalBottomSheet")                    { TorangModalBottomSheet() }
+            composable("FeedMenuModalBottomSheet")                  { PreviewFeedMenuModalBottomSheet() }
+            composable("ShareModalBottomSheet")                     { PreviewShareModalBottomSheet() }
+            composable("CloseDetectBottomSheetScaffold")            { PreviewCloseDetectBottomSheetScaffold() }
+            composable("PartiallyModalBottomSheet")                 { PreviewPartiallyModalBottomSheet() }
+            composable("SimpleTextListBottomSheetScaffold")         { PreviewSimpleTextListBottomSheetScaffold() }
         }
     }
 }
 
+@Composable
+fun test(navController : NavHostController = rememberNavController()){
+    Scaffold {
+        Column(Modifier.padding(it)) {
+            Text("basic")
+            Button({
+                navController.navigate("ModalBottomSheetPractice1")
+            }) {
+                Text("ModalBottomSheet")
+            }
+            Button({
+                navController.navigate("PartialBottomSheet")
+            }) {
+                Text("PartialBottomSheet")
+            }
+            HorizontalDivider()
+            Text("basic application")
+            Button({
+                /** 클릭 시 이동 [PreviewTorangBottomSheetScaffold] */
+                navController.navigate("TorangBottomSheetScaffold")
+            }) {
+                Text("TorangBottomSheetScaffold")
+            }
+            Button({
+                navController.navigate("TorangModalBottomSheet")
+            }) {
+                Text("TorangModalBottomSheet")
+            }
+            HorizontalDivider()
+            Text("torang application")
+            Button({
+                navController.navigate("PickHeight70PercentBottomSheetScaffold")
+            }) {
+                Text("PickHeight70PercentBottomSheetScaffold")
+            }
+
+            Button({
+                /** [PreviewFixedInputBottomSheetScaffold] */
+                navController.navigate("FixedInputBottomSheetScaffold")
+            }) {
+                Text("FixedInputBottomSheetScaffold")
+            }
+
+            Button({
+                navController.navigate("FeedMenuModalBottomSheet")
+            }) {
+                Text("FeedMenuModalBottomSheet")
+            }
+
+            Button({
+                navController.navigate("ShareModalBottomSheet")
+            }) {
+                Text("ShareModalBottomSheet")
+            }
+
+            Button({
+                navController.navigate("CloseDetectBottomSheetScaffold")
+            }) {
+                Text("CloseDetectBottomSheetScaffold")
+            }
+
+            Button({
+                navController.navigate("PartiallyModalBottomSheet")
+            }) {
+                Text("PartiallyModalBottomSheet")
+            }
+            Button({
+                navController.navigate("SimpleTextListBottomSheetScaffold")
+            }) {
+                Text("SimpleTextListBottomSheetScaffold")
+            }
+            Button({
+                navController.navigate("LoginRepositoryTest")
+            }) {
+                Text("LoginRepositoryTest")
+            }
+
+
+        }
+    }
+}
 
 @Preview
 @Composable
