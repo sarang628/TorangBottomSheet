@@ -131,5 +131,8 @@ dependencies {
     implementation(libs.torangRepository)
     implementation(libs.torangdatabase)
     implementation(libs.torangnetwork)
+    implementation(libs.commonImageLoader)
     implementation(libs.theme)
+
+    implementation("io.coil-kt:coil-compose:2.6.0")
 }

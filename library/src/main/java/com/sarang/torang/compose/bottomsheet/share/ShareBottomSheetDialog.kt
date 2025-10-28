@@ -9,7 +9,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -78,8 +77,9 @@ fun _ShareModalBottomSheet(
 @Preview
 @Composable
 fun PreviewShareModalBottomSheet() {
-    ShareModalBottomSheet(
+    _ShareModalBottomSheet(
         isExpand = true,
-        onClose = {}
+        onClose = {},
+        uiState = ShareDialogUiState(list = listOf(User.Sample, User.Sample, User.Sample, User.Sample, User.Sample, User.Sample, User.Sample, User.Sample, User.Sample))
     )
 }
