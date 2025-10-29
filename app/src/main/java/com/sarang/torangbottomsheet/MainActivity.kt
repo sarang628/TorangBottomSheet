@@ -18,6 +18,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocal
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -41,6 +43,9 @@ import com.sarang.torang.compose.bottomsheet.feed.PreviewFeedMenuModalBottomShee
 import com.sarang.torang.compose.bottomsheet.practice.ModalBottomSheetPractice1
 import com.sarang.torang.compose.bottomsheet.practice.PartialBottomSheet
 import com.sarang.torang.compose.bottomsheet.share.PreviewShareModalBottomSheet
+import com.sarang.torang.compose.bottomsheet.share.ShareModalBottomSheet
+import com.sarang.torang.compose.bottomsheet.share.components.LocalShareImageLoad
+import com.sarang.torang.di.bottomsheet_di.CustomShareImageLoader
 import com.sarang.torang.repository.FeedRepository
 import com.sarang.torang.repository.LoginRepository
 import com.sarang.torang.repository.LoginRepositoryTest
@@ -80,7 +85,7 @@ fun TestNavigation(loginRepository : LoginRepository) {
     val navController = rememberNavController()
     Box(Modifier.fillMaxSize())
     {
-        NavHost(navController, startDestination = "ShareModalBottomSheet") {
+        NavHost(navController, startDestination = "test") {
             composable("test")                                      { test(navController) }
             composable("LoginRepositoryTest")                       { LoginRepositoryTest(loginRepository = loginRepository) }
             composable("ModalBottomSheetPractice1")                 { ModalBottomSheetPractice1() }
@@ -90,7 +95,13 @@ fun TestNavigation(loginRepository : LoginRepository) {
             composable("FixedInputBottomSheetScaffold")             { PreviewFixedInputBottomSheetScaffold() }
             composable("TorangModalBottomSheet")                    { TorangModalBottomSheet() }
             composable("FeedMenuModalBottomSheet")                  { PreviewFeedMenuModalBottomSheet() }
-            composable("ShareModalBottomSheet")                     { PreviewShareModalBottomSheet() }
+            composable("ShareModalBottomSheet")                     {
+                CompositionLocalProvider(
+                    LocalShareImageLoad provides CustomShareImageLoader
+                ) {
+                    ShareModalBottomSheet(isExpand = true)
+                }
+            }
             composable("CloseDetectBottomSheetScaffold")            { PreviewCloseDetectBottomSheetScaffold() }
             composable("PartiallyModalBottomSheet")                 { PreviewPartiallyModalBottomSheet() }
             composable("SimpleTextListBottomSheetScaffold")         { PreviewSimpleTextListBottomSheetScaffold() }

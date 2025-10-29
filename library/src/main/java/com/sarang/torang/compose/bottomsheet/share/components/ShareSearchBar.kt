@@ -28,7 +28,9 @@ import com.sarang.torang.R
 
 @Preview
 @Composable
-fun ShareSearchBar() {
+fun ShareSearchBar(
+    onValueChange: (String) -> Unit = {}
+) {
     var input by remember { mutableStateOf("") }
     Box(
         Modifier
@@ -41,7 +43,10 @@ fun ShareSearchBar() {
     ) {
         BasicTextField(
             value = input,
-            onValueChange = { input = it },
+            onValueChange = {
+                input = it
+                onValueChange(it)
+                            },
             modifier = Modifier
                 .height(50.dp)
                 .fillMaxWidth(),

@@ -16,6 +16,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AddCircle
 import androidx.compose.material.icons.outlined.CheckCircle
 import androidx.compose.material.icons.outlined.Share
+import androidx.compose.material.icons.sharp.CheckCircle
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -40,12 +41,12 @@ fun ShareBottomMenus(
         item {
             ShareBottomMenu(
                 text = "링크 복사",
-                imageVector = Icons.Outlined.AddCircle,
+                imageVector = Icons.Sharp.CheckCircle,
                 onClick = onLinkCopy
             )
             ShareBottomMenu(
                 text = "스토리에\n추가",
-                imageVector = Icons.Outlined.CheckCircle,
+                imageVector = Icons.Outlined.AddCircle,
                 onClick = onAddStory
             )
             ShareBottomMenu(
