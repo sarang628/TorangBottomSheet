@@ -99,7 +99,7 @@ fun TestNavigation(loginRepository : LoginRepository) {
                 CompositionLocalProvider(
                     LocalShareImageLoad provides CustomShareImageLoader
                 ) {
-                    ShareModalBottomSheet(isExpand = true)
+                    ShareModalBottomSheet(isExpand = true, reviewId = 0)
                 }
             }
             composable("CloseDetectBottomSheetScaffold")            { PreviewCloseDetectBottomSheetScaffold() }

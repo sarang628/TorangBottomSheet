@@ -22,6 +22,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -40,6 +42,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun ShareModalBottomSheet(
     shareViewModel  : ShareViewModel    = hiltViewModel(),
+    reviewId        : Int,
     isExpand        : Boolean           = false,
     onClose         : () -> Unit        = {},
     onLinkCopy      : () -> Unit        = {},
@@ -50,12 +53,19 @@ fun ShareModalBottomSheet(
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val coroutine = rememberCoroutineScope()
     var expand by remember { mutableStateOf(isExpand) }
+    val clipboardManager = LocalClipboardManager.current
     _ShareModalBottomSheet(
         uiState     = uiState,
         isExpand    = expand,
         onSelect    = { shareViewModel.select(it) },
         onClose     = onClose,
-        onLinkCopy  = onLinkCopy,
+        onLinkCopy  = {
+            coroutine.launch {
+                shareViewModel.getLink(reviewId)?.let {
+                    clipboardManager.setText(AnnotatedString(it))
+                }
+            }
+                      },
         onAddStory  = onAddStory,
         onShare     = onShare,
         onValueChange = {

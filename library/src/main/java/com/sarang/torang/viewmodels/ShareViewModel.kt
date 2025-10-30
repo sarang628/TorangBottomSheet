@@ -7,6 +7,7 @@ import androidx.core.graphics.convertTo
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sarang.torang.uistate.ShareDialogUiState
+import com.sarang.torang.usecase.GetCopyLinkUseCase
 import com.sarang.torang.usecase.GetFollowerUseCase
 import com.sarang.torang.usecase.SendShareUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,7 +20,8 @@ import javax.inject.Inject
 @HiltViewModel
 class ShareViewModel @Inject constructor(
     getFollowerUseCase: GetFollowerUseCase,
-    val sendShareUseCase : SendShareUseCase
+    val sendShareUseCase : SendShareUseCase,
+    val copyLinkUseCase : GetCopyLinkUseCase
 ) : ViewModel()
 {
     var uiState by mutableStateOf(ShareDialogUiState()); private set
@@ -70,6 +72,15 @@ class ShareViewModel @Inject constructor(
             errorMessage = "피드가 선택되지 않았습니다."
         }
         isSending = false
+    }
+
+    suspend fun getLink(reviewId: Int): String? {
+        try {
+            return copyLinkUseCase.invoke(reviewId)
+        } catch (e: Exception) {
+            errorMessage = "링크를 저장하는데 실패하였습니다."
+            return null
+        }
     }
 
     init
