@@ -83,6 +83,15 @@ class ShareViewModel @Inject constructor(
         }
     }
 
+    fun onClose() {
+        text = ""
+        reviewId = -1
+        uiState = uiState.copy(
+            list = uiState.list.map { it.copy(isSelected = false) },
+            filteredList = uiState.list.map { it.copy(isSelected = false) }
+        )
+    }
+
     init
     {
         viewModelScope.launch {

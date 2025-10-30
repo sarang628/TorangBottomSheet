@@ -11,18 +11,21 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocal
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -51,6 +54,7 @@ import com.sarang.torang.repository.LoginRepository
 import com.sarang.torang.repository.LoginRepositoryTest
 import com.sryang.torang.ui.TorangTheme
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -80,6 +84,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TestNavigation(loginRepository : LoginRepository) {
     val navController = rememberNavController()
@@ -96,10 +101,23 @@ fun TestNavigation(loginRepository : LoginRepository) {
             composable("TorangModalBottomSheet")                    { TorangModalBottomSheet() }
             composable("FeedMenuModalBottomSheet")                  { PreviewFeedMenuModalBottomSheet() }
             composable("ShareModalBottomSheet")                     {
+                var isExpand by remember { mutableStateOf(false) }
+                val coroutineScope = rememberCoroutineScope()
                 CompositionLocalProvider(
                     LocalShareImageLoad provides CustomShareImageLoader
                 ) {
-                    ShareModalBottomSheet(isExpand = true, reviewId = 0)
+                    ShareModalBottomSheet(
+                        isExpand = isExpand,
+                        reviewId = 0,
+                        onClose = {
+                            isExpand = false
+                        }
+                    )
+                    Button({
+                        isExpand = true
+                    }) {
+                        Text("show")
+                    }
                 }
             }
             composable("CloseDetectBottomSheetScaffold")            { PreviewCloseDetectBottomSheetScaffold() }
