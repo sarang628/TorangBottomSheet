@@ -88,7 +88,8 @@ fun ShareModalBottomSheet(
         onSend = {
             coroutine.launch {
                 shareViewModel.sendShare()
-                sheetState.hide()
+                shareViewModel.onClose()
+                onClose()
             }
         },
         isSending = shareViewModel.isSending,
