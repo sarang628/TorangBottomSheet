@@ -67,7 +67,13 @@ class ShareViewModel @Inject constructor(
     suspend fun sendShare() {
         isSending = true
         if (reviewId < 0) {
-            sendShareUseCase.invoke(reviewId, uiState.list.filter { isSending }.map { it.userId })
+            try {
+                sendShareUseCase.invoke(
+                    reviewId,
+                    uiState.list.filter { isSending }.map { it.userId })
+            }catch (e : Exception){
+                errorMessage = "${e.message}"
+            }
         } else {
             errorMessage = "피드가 선택되지 않았습니다."
         }
@@ -75,11 +81,14 @@ class ShareViewModel @Inject constructor(
     }
 
     suspend fun getLink(reviewId: Int): String? {
+        isSending = true
         try {
             return copyLinkUseCase.invoke(reviewId)
         } catch (e: Exception) {
             errorMessage = "링크를 저장하는데 실패하였습니다."
             return null
+        }finally {
+            isSending = false
         }
     }
 
